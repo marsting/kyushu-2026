@@ -1,0 +1,1733 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌊 2026 九州秋日漫遊手冊 ｜ 5人旅行・公費記帳・退稅全攻略</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Firebase Compat CDN (v9.23.0) for Realtime Cloud Sync -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            sanrio: {
+              pink: '#2563EB',
+              pinkLight: '#EFF6FF',
+              pinkHover: '#1D4ED8',
+              blue: '#70C4E8',
+              blueLight: '#F0F9FF',
+              yellow: '#F9D874',
+              yellowLight: '#FFFBEB',
+              purple: '#B388FF',
+              purpleLight: '#FAF5FF',
+              cream: '#FFFDF9',
+              dark: '#0F172A',
+              border: '#BFDBFE'
+            }
+          },
+          boxShadow: {
+            'kawaii': '0 4px 15px -2px rgba(37, 99, 235, 0.15)',
+            'kawaii-sm': '0 2px 8px rgba(37, 99, 235, 0.08)'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang TC", "Microsoft JhengHei", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      color: #0f172a;
+      background-color: #f8fafc;
+      background-image: radial-gradient(#cbd5e1 0.75px, transparent 0.75px);
+      background-size: 20px 20px;
+    }
+    h1, h2, h3, h4, .font-bold {
+      letter-spacing: -0.01em;
+    }
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="text-slate-900 min-h-screen pb-24 md:pb-12">
+
+  <!-- Top Sweet Header -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b-2 border-blue-100 shadow-kawaii-sm">
+    <div class="max-w-5xl mx-auto px-4 py-2.5 flex items-center justify-between">
+      <div class="flex items-center space-x-2.5">
+        <div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-blue-600 to-sky-400 text-white flex items-center justify-center font-bold text-base shadow-sm">
+          ✈️
+        </div>
+        <div>
+          <div class="flex items-center space-x-1.5">
+            <h1 class="text-sm md:text-base font-bold text-stone-900 tracking-wide">九州秋日漫遊手冊</h1>
+            <span id="sync-status-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700 flex items-center space-x-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span id="sync-status-text">雲端同步已配置</span>
+            </span>
+          </div>
+          <p class="text-[11px] text-blue-500 font-medium">11/14 – 11/20 ✈️ 小婷・朱大哥・珍姐・枝枝・小姨丈 (5人行)</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-1.5">
+        <button id="btn-open-cloud-config" class="px-2.5 py-1 text-xs font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-xl transition flex items-center shadow-sm" title="查看 Firebase 連線資訊">
+          <i class="fa-solid fa-cloud mr-1"></i><span class="hidden sm:inline">雲端</span>同步狀態
+        </button>
+        <button id="btn-line-share" class="px-2.5 py-1 text-xs font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-xl transition shadow-sm flex items-center" title="複製分帳摘要">
+          <i class="fa-brands fa-line mr-1 text-emerald-500 text-sm"></i>LINE公費報告
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Navigation Tabs -->
+    <div class="max-w-5xl mx-auto px-3 flex space-x-1.5 overflow-x-auto hide-scrollbar border-t border-blue-50 py-1">
+      <button class="nav-tab px-3.5 py-2 text-xs sm:text-sm font-bold rounded-xl text-white bg-blue-600 shadow-sm flex items-center space-x-1.5 transition flex-shrink-0" data-tab="itinerary">
+        <span>📅</span><span>每日行程</span>
+      </button>
+      <button class="nav-tab px-3.5 py-2 text-xs sm:text-sm font-bold rounded-xl text-stone-500 hover:text-blue-600 hover:bg-blue-50 flex items-center space-x-1.5 transition flex-shrink-0" data-tab="expenses">
+        <span>💰</span><span>公費與記帳</span>
+      </button>
+      <button class="nav-tab px-3.5 py-2 text-xs sm:text-sm font-bold rounded-xl text-stone-500 hover:text-blue-600 hover:bg-blue-50 flex items-center space-x-1.5 transition flex-shrink-0" data-tab="taxrefund">
+        <span>🛍️</span><span>機場退稅指南</span>
+      </button>
+      <button class="nav-tab px-3.5 py-2 text-xs sm:text-sm font-bold rounded-xl text-stone-500 hover:text-blue-600 hover:bg-blue-50 flex items-center space-x-1.5 transition flex-shrink-0" data-tab="notes">
+        <span>📝</span><span>記事清單</span>
+      </button>
+      <button class="nav-tab px-3.5 py-2 text-xs sm:text-sm font-bold rounded-xl text-stone-500 hover:text-blue-600 hover:bg-blue-50 flex items-center space-x-1.5 transition flex-shrink-0" data-tab="guides">
+        <span>ℹ️</span><span>實用指南</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-5xl mx-auto px-4 py-4">
+
+    <!-- TAB 1: ITINERARY -->
+    <section id="tab-itinerary" class="tab-content block animate-in fade-in duration-150">
+      
+      <!-- Day Tabs Bar (One Tab per Day) -->
+      <div class="mb-4 bg-white p-2 rounded-2xl border-2 border-blue-100 shadow-kawaii-sm flex items-center space-x-1.5 overflow-x-auto hide-scrollbar">
+        <button class="day-tab px-3 py-1.5 text-xs font-bold rounded-xl bg-gradient-to-r from-sanrio-pink to-rose-400 text-white shadow-sm flex-shrink-0" data-day="1">
+          <span>Day 1</span><span class="ml-1 text-[10px] font-normal opacity-90">11/14 熊本</span>
+        </button>
+        <button class="day-tab px-3 py-1.5 text-xs font-bold rounded-xl text-stone-500 hover:bg-blue-50 hover:text-blue-600 flex-shrink-0" data-day="2">
+          <span>Day 2</span><span class="ml-1 text-[10px] font-normal text-stone-400">11/15 高千穗</span>
+        </button>
+        <button class="day-tab px-3 py-1.5 text-xs font-bold rounded-xl text-stone-500 hover:bg-blue-50 hover:text-blue-600 flex-shrink-0" data-day="3">
+          <span>Day 3</span><span class="ml-1 text-[10px] font-normal text-stone-400">11/16 鹿兒島</span>
+        </button>
+        <button class="day-tab px-3 py-1.5 text-xs font-bold rounded-xl text-stone-500 hover:bg-blue-50 hover:text-blue-600 flex-shrink-0" data-day="4">
+          <span>Day 4</span><span class="ml-1 text-[10px] font-normal text-stone-400">11/17 福岡漫步</span>
+        </button>
+        <button class="day-tab px-3 py-1.5 text-xs font-bold rounded-xl text-stone-500 hover:bg-blue-50 hover:text-blue-600 flex-shrink-0" data-day="5">
+          <span>Day 5</span><span class="ml-1 text-[10px] font-normal text-stone-400">11/18 秋月賞楓</span>
+        </button>
+        <button class="day-tab px-3 py-1.5 text-xs font-bold rounded-xl text-stone-500 hover:bg-blue-50 hover:text-blue-600 flex-shrink-0" data-day="6">
+          <span>Day 6</span><span class="ml-1 text-[10px] font-normal text-stone-400">11/19 天神購物</span>
+        </button>
+        <button class="day-tab px-3 py-1.5 text-xs font-bold rounded-xl text-stone-500 hover:bg-blue-50 hover:text-blue-600 flex-shrink-0" data-day="7">
+          <span>Day 7</span><span class="ml-1 text-[10px] font-normal text-stone-400">11/20 返台</span>
+        </button>
+        <button class="day-tab px-3 py-1.5 text-xs font-bold rounded-xl text-stone-400 hover:bg-stone-100 flex-shrink-0" data-day="all">
+          <span>全部天數</span>
+        </button>
+      </div>
+
+      <!-- Quick Category Filters -->
+      <div class="mb-4 flex flex-wrap gap-1.5 items-center text-xs">
+        <span class="text-blue-500 text-[11px] font-bold mr-1">✨ 快速篩選：</span>
+        <button class="filter-tag px-2.5 py-1 rounded-xl bg-stone-200 text-stone-800 font-bold" data-tag="all">全部</button>
+        <button class="filter-tag px-2.5 py-1 rounded-xl bg-white border border-blue-200 text-stone-600 hover:bg-blue-50 font-medium" data-tag="dining">
+          🍰 餐廳美食
+        </button>
+        <button class="filter-tag px-2.5 py-1 rounded-xl bg-white border border-blue-200 text-stone-600 hover:bg-blue-50 font-medium" data-tag="sight">
+          ⛩️ 名勝景點
+        </button>
+        <button class="filter-tag px-2.5 py-1 rounded-xl bg-white border border-blue-200 text-stone-600 hover:bg-blue-50 font-medium" data-tag="shopping">
+          🛍️ 購物採買
+        </button>
+        <button class="filter-tag px-2.5 py-1 rounded-xl bg-white border border-blue-200 text-stone-600 hover:bg-blue-50 font-medium" data-tag="transport">
+          🚆 交通/一日遊
+        </button>
+      </div>
+
+      <!-- Itinerary List Render Container -->
+      <div id="itinerary-container" class="space-y-4">
+        <!-- Rendered dynamically via JS -->
+      </div>
+    </section>
+
+    <!-- TAB 2: EXPENSES & SHARED FUND CALCULATOR -->
+    <section id="tab-expenses" class="tab-content hidden animate-in fade-in duration-150">
+      
+      <!-- Shared Fund (Kitty Pool) Hero Banner -->
+      <div class="bg-gradient-to-tr from-sanrio-pink via-rose-400 to-sky-300 rounded-3xl text-white p-5 shadow-kawaii mb-5 border-2 border-white">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="px-2.5 py-0.5 rounded-full bg-white/25 text-[10px] font-bold uppercase tracking-wider">Kitty Pool 🐱</span>
+              <h2 class="text-base sm:text-lg font-bold tracking-wide">5人團體公費水庫</h2>
+            </div>
+            <p class="text-xs text-blue-100 mt-1 font-medium">出發前統一收取，外食、交通門票優先由公費支付 ✨</p>
+          </div>
+          <div class="flex items-center space-x-3">
+            <div class="text-right">
+              <p class="text-[11px] text-blue-100">目前公費現金剩餘</p>
+              <p id="pool-balance-jpy" class="text-2xl md:text-3xl font-bold font-mono">¥0</p>
+              <p id="pool-balance-twd" class="text-xs text-blue-100">約 NT$ 0</p>
+            </div>
+            <button id="btn-collect-pool" class="px-3.5 py-2.5 bg-white text-blue-600 hover:bg-blue-50 font-bold text-xs rounded-2xl shadow-sm transition transform hover:scale-105">
+              <i class="fa-solid fa-hand-holding-dollar mr-1"></i>向全員收公費
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-4 pt-3 border-t border-white/20 text-xs font-medium">
+          <div>
+            <span class="text-blue-100 text-[11px]">公費總存入：</span>
+            <span id="pool-total-in" class="font-bold font-mono">¥0</span>
+          </div>
+          <div>
+            <span class="text-blue-100 text-[11px]">公費總支出：</span>
+            <span id="pool-total-out" class="font-bold font-mono">¥0</span>
+          </div>
+          <div class="col-span-2 sm:col-span-1">
+            <span class="text-blue-100 text-[11px]">公費扣款筆數：</span>
+            <span id="pool-count" class="font-bold">0 筆</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Overview Dashboard -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+        <div class="bg-white p-3.5 rounded-2xl border-2 border-blue-100 shadow-kawaii-sm">
+          <p class="text-[11px] text-stone-400 font-semibold mb-0.5">全體總支出 (含個人代墊)</p>
+          <p id="stat-total-expense" class="text-base md:text-lg font-bold text-stone-900 font-mono">¥0</p>
+          <p id="stat-total-twd" class="text-[10px] text-stone-400">約 NT$ 0</p>
+        </div>
+        <div class="bg-white p-3.5 rounded-2xl border-2 border-blue-100 shadow-kawaii-sm">
+          <p class="text-[11px] text-stone-400 font-semibold mb-0.5">每人平均分攤</p>
+          <p id="stat-avg-expense" class="text-base md:text-lg font-bold text-blue-600 font-mono">¥0</p>
+          <p id="stat-avg-twd" class="text-[10px] text-stone-400">約 NT$ 0</p>
+        </div>
+        <div class="bg-white p-3.5 rounded-2xl border-2 border-blue-100 shadow-kawaii-sm">
+          <p class="text-[11px] text-stone-400 font-semibold mb-0.5">總記帳筆數</p>
+          <p id="stat-count-expense" class="text-base md:text-lg font-bold text-stone-900">0 筆</p>
+          <p class="text-[10px] text-blue-500">同行 5 位成員</p>
+        </div>
+        <div class="bg-white p-3.5 rounded-2xl border-2 border-blue-100 shadow-kawaii-sm">
+          <p class="text-[11px] text-stone-400 font-semibold mb-0.5">匯率 (1 JPY = TWD)</p>
+          <div class="flex items-center space-x-1.5 mt-0.5">
+            <input type="number" id="input-exchange-rate" step="0.001" value="0.21" class="w-16 px-2 py-0.5 text-xs font-bold border border-blue-200 rounded-lg text-stone-800 focus:outline-none focus:ring-1 focus:ring-sanrio-pink">
+            <span class="text-xs text-stone-400">NT$</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Real-time Balances by Member (6 Members) -->
+      <div class="bg-white rounded-3xl border-2 border-blue-100 shadow-kawaii-sm p-4 mb-4">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-xs sm:text-sm font-bold text-stone-900 flex items-center">
+            <span class="mr-1.5">👥</span>5 位成員收支與個人代墊狀況
+          </h3>
+          <span class="text-[11px] text-stone-400">綠色代表代墊多付，粉紅色代表尚須補款</span>
+        </div>
+        <div id="members-balance-grid" class="grid grid-cols-2 md:grid-cols-3 gap-2.5">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- Debt Settlement Suggestions -->
+      <div class="bg-blue-50/70 border-2 border-blue-200/80 rounded-2xl p-4 mb-4">
+        <h3 class="text-xs font-bold text-blue-950 flex items-center mb-1.5">
+          <i class="fa-solid fa-hand-holding-heart mr-1.5 text-blue-600"></i>個人代墊平帳建議 (最少次數結算)
+        </h3>
+        <div id="settlement-plan" class="space-y-1 text-xs text-blue-900">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- Action Bar & Add Expense Button -->
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="text-xs sm:text-sm font-bold text-stone-900">支出明細清單</h3>
+        <button id="btn-open-add-expense" class="px-3.5 py-1.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-600Hover rounded-xl shadow-kawaii-sm transition flex items-center space-x-1">
+          <i class="fa-solid fa-plus mr-1"></i><span>新增一筆支出</span>
+        </button>
+      </div>
+
+      <!-- Expense List Container -->
+      <div id="expenses-list" class="space-y-2">
+        <!-- Dynamically populated -->
+      </div>
+    </section>
+
+    <!-- TAB 3: TAX REFUND GUIDE (Dedicated Tab) -->
+    <section id="tab-taxrefund" class="tab-content hidden animate-in fade-in duration-150 space-y-4">
+      
+      <!-- Hero Banner -->
+      <div class="bg-gradient-to-r from-blue-500 via-rose-300 to-sanrio-yellow rounded-3xl p-5 text-white shadow-kawaii">
+        <div class="flex items-center space-x-2 mb-1">
+          <span class="text-xl">🛍️</span>
+          <h2 class="text-base sm:text-lg font-bold tracking-wide">日本免稅與福岡機場現金退稅全攻略</h2>
+        </div>
+        <p class="text-xs text-white/95 leading-relaxed font-medium">
+          買好買滿不用慌！搞清楚「市區即時免稅」與「福岡機場海關/現金退稅流程」，回國退稅超順暢 ✨
+        </p>
+      </div>
+
+      <!-- 2 Main System Clarification Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+        <div class="bg-white p-4 rounded-3xl border-2 border-blue-100 shadow-kawaii-sm">
+          <div class="flex items-center space-x-2 mb-2">
+            <span class="w-7 h-7 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-xs">A</span>
+            <h3 class="font-bold text-stone-900 text-sm">日本市區免稅 (店家現場退稅)</h3>
+          </div>
+          <p class="text-xs text-stone-600 leading-relaxed mb-2.5">
+            在<strong>大國藥妝、松本清、唐吉訶德、BicCamera、各大百貨（岩田屋、博多阪急、PARCO）</strong>購物時：
+          </p>
+          <ul class="text-xs text-stone-600 space-y-1.5 list-disc pl-4 font-medium">
+            <li><strong>門檻</strong>：同一店家當日未稅金額滿 <strong>5,000 日圓</strong> 以上。</li>
+            <li><strong>結帳方式</strong>：出示<strong>護照實體正本</strong>（或 Visit Japan Web 免稅二維條碼）。</li>
+            <li><strong>現金退稅</strong>：大部分店家直接用<strong>未稅價結帳</strong>；百貨公司則是先含稅結帳，再憑發票至免稅櫃檯<strong>現場領取日幣現金退稅</strong>！</li>
+            <li><strong>⚠️ 消耗品破壞袋絕不能拆封</strong>：藥妝、零食會裝入透明免稅密封袋，在出境日本前<strong>嚴禁拆封</strong>（拆封視同境內自用，被抽查將補繳 10% 消費稅）。</li>
+          </ul>
+        </div>
+
+        <div class="bg-white p-4 rounded-3xl border-2 border-blue-100 shadow-kawaii-sm">
+          <div class="flex items-center space-x-2 mb-2">
+            <span class="w-7 h-7 rounded-full bg-blue-100 text-sanrio-blue flex items-center justify-center font-bold text-xs">B</span>
+            <h3 class="font-bold text-stone-900 text-sm">福岡機場海關與現金退稅處</h3>
+          </div>
+          <p class="text-xs text-stone-600 leading-relaxed mb-2.5">
+            最後一天在<strong>福岡機場國際線航廈 (FUK TI)</strong>的出境手續：
+          </p>
+          <ul class="text-xs text-stone-600 space-y-1.5 list-disc pl-4 font-medium">
+            <li><strong>海關電子申報（税関検査）</strong>：過安檢後至出境審查前的海關櫃檯，在「免稅手續電子機」<strong>感應掃描護照</strong>即可，購買紀錄早已全電子化上傳。</li>
+            <li><strong>托運行李有液體免稅品</strong>：保養品、化妝水等液體若要放托運行李，報到掛行李時告知華航地勤人員「行李內有免稅品」，依指示過磅托運即可。</li>
+            <li><strong>機場現金退稅櫃檯</strong>：若持有特定國際免稅單據（如 Global Blue、Planet 等外國退稅單），在國際線出境管制區內的專屬退稅/外幣兌換櫃檯（Travelex）出示「免稅單＋護照＋登機證」，即可<strong>直接領取日幣現鈔</strong>！</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Step-by-Step Airport Cash Refund Checklist -->
+      <div class="bg-white rounded-3xl border-2 border-blue-100 shadow-kawaii-sm p-5">
+        <h3 class="text-sm font-bold text-blue-600 flex items-center mb-3">
+          <span class="mr-2">✈️</span>福岡機場現金退稅 5 步驟手把手流程
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-2.5 text-xs font-medium">
+          <div class="p-3 bg-blue-50/70 rounded-2xl border border-blue-200">
+            <span class="font-bold text-blue-600 block mb-1">Step 1. 備妥證件</span>
+            <p class="text-stone-600">隨身攜帶護照正本、登機證，並備齊所有市區購物發票與退稅收據憑單。</p>
+          </div>
+          <div class="p-3 bg-blue-50/70 rounded-2xl border border-blue-200">
+            <span class="font-bold text-blue-600 block mb-1">Step 2. 封條檢查</span>
+            <p class="text-stone-600">確認藥妝與食品密封袋完好無損，若有超過 100ml 液體務必放入大行李箱托運。</p>
+          </div>
+          <div class="p-3 bg-blue-50/70 rounded-2xl border border-blue-200">
+            <span class="font-bold text-blue-600 block mb-1">Step 3. 櫃檯託運</span>
+            <p class="text-stone-600">華航 CI139 櫃檯辦理登機，告知地勤大行李箱內有免稅品。</p>
+          </div>
+          <div class="p-3 bg-blue-50/70 rounded-2xl border border-blue-200">
+            <span class="font-bold text-blue-600 block mb-1">Step 4. 海關掃描</span>
+            <p class="text-stone-600">通過安檢後，在海關審查處（税関）將護照放在電子讀取機上感應銷帳。</p>
+          </div>
+          <div class="p-3 bg-emerald-50 rounded-2xl border border-emerald-200">
+            <span class="font-bold text-emerald-700 block mb-1">Step 5. 現金退稅領取</span>
+            <p class="text-emerald-800">若有獨立退稅單，至管制區內 Travelex/退稅處出示單據，直接領取日幣現金！</p>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- TAB 4: NOTES & CHECKLISTS -->
+    <section id="tab-notes" class="tab-content hidden animate-in fade-in duration-150">
+      
+      <!-- Packing / Todo Checklist -->
+      <div class="bg-white rounded-3xl border-2 border-blue-100 shadow-kawaii-sm p-4 mb-5">
+        <div class="flex items-center justify-between mb-3">
+          <div>
+            <h2 class="text-xs sm:text-sm font-bold text-stone-900 flex items-center">
+              <span class="mr-1.5">🧳</span>行前準備與行李打包檢核表
+            </h2>
+            <p id="checklist-progress-text" class="text-xs text-blue-500 font-bold mt-0.5">進度：0 / 0 完成 (0%)</p>
+          </div>
+          <button id="btn-toggle-add-checklist" class="text-xs px-3 py-1 bg-blue-50 hover:bg-blue-100 text-blue-600 font-bold rounded-xl transition">
+            <i class="fa-solid fa-plus mr-1"></i>新增待辦
+          </button>
+        </div>
+
+        <div class="w-full bg-blue-50 rounded-full h-2 mb-3 overflow-hidden">
+          <div id="checklist-progress-bar" class="bg-gradient-to-r from-blue-600 to-sky-400 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+        </div>
+
+        <!-- Inline Add Checklist Form -->
+        <div id="checklist-add-form" class="hidden mb-3 p-2.5 bg-blue-50/70 border-2 border-blue-100 rounded-2xl flex items-center space-x-2">
+          <input type="text" id="input-new-checklist" placeholder="輸入待辦或行李打包項目..." class="flex-grow px-3 py-1.5 text-xs border border-blue-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-sanrio-pink bg-white">
+          <button id="btn-save-new-checklist" class="px-3.5 py-1.5 text-xs bg-blue-600 hover:bg-blue-600Hover text-white font-bold rounded-xl transition">新增</button>
+          <button id="btn-cancel-new-checklist" class="px-2.5 py-1.5 text-xs text-stone-500 hover:text-stone-800 transition">取消</button>
+        </div>
+
+        <div id="checklist-items" class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- Memo Notes Section -->
+      <div class="flex items-center justify-between mb-3">
+        <div>
+          <h2 class="text-xs sm:text-sm font-bold text-stone-900">旅程備忘筆記</h2>
+          <p class="text-[11px] text-stone-400 font-medium">伴手禮心願單、WiFi 機取還、優惠代碼等</p>
+        </div>
+        <button id="btn-open-add-note" class="px-3 py-1.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-600Hover rounded-xl shadow-kawaii-sm transition flex items-center space-x-1">
+          <i class="fa-solid fa-plus mr-1"></i><span>新增筆記</span>
+        </button>
+      </div>
+
+      <div id="notes-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <!-- Dynamically populated -->
+      </div>
+    </section>
+
+    <!-- TAB 5: GUIDES & PASSES -->
+    <section id="tab-guides" class="tab-content hidden animate-in fade-in duration-150 space-y-4">
+      
+      <!-- Day 1 Transportation & SAKURA MACHI Guide -->
+      <div class="bg-white rounded-3xl border-2 border-blue-100 shadow-kawaii-sm p-4">
+        <h3 class="text-sm font-bold text-blue-600 flex items-center mb-2">
+          <span class="mr-2">🚌</span>第一天（11/14 六）出發會合與抵達接駁指南
+        </h3>
+        <div class="space-y-2.5 text-xs text-stone-700 font-medium">
+          <div class="p-3 bg-blue-50/60 rounded-2xl border border-blue-100">
+            <p class="font-bold text-stone-900 mb-1">🛫 航班與出發會合資訊：</p>
+            <p class="text-stone-600 leading-relaxed">
+              • <strong>台南出發組：</strong>11/13（五）23:20 集合完成夜車北上，約 03:00–03:30 抵達桃機 T2。<br>
+              • <strong>台北出發組：</strong>11/14（六）03:00 出發，約 03:45 抵達桃機 T2 華航櫃檯前兩組合流報到。<br>
+              • <strong>班機資訊：</strong>中華航空 CI394 ｜ <strong>第二航廈 (T2)</strong> ｜ <strong>05:50 起飛 ➜ 08:50 抵達熊本 (KMJ)</strong>，飛行時間剛好 2 小時。
+            </p>
+          </div>
+          <div class="p-3 bg-blue-50/60 rounded-2xl border border-blue-100">
+            <p class="font-bold text-stone-900 mb-1">🚌 熊本機場 ➜ 櫻町總站（詳細搭車方式）：</p>
+            <p class="text-stone-600 leading-relaxed">
+              出關後走到國際線航廈 1 樓外，在 <strong>4 號站牌（4番のりば）</strong> 搭乘「九州產交機場利木津巴士（往熊本駅前方向）」。可在站牌旁自動售票機購票（大人 1,000 日圓），或<strong>直接刷 IC 卡（Suica / ICOCA 等）或信用卡感應支付</strong>。搭乘約 50 分鐘直達「櫻町巴士總站（桜町バスターミナル）」，下車步行約 5 分鐘即達光芒飯店新市街寄放大行李。
+            </p>
+          </div>
+          <div class="p-3 bg-amber-50 border border-amber-200 rounded-2xl text-amber-900">
+            <p class="font-bold mb-1"><i class="fa-solid fa-sparkles mr-1"></i>重要採購備忘：藥妝強烈建議在熊本買齊！</p>
+            <p class="text-xs leading-relaxed text-amber-800">
+              熊本新市街與下通拱廊商圈集中了大國藥妝（Daikoku）、松本清、Sundrug 與 Cosmos，店家競爭激烈、免稅促銷折扣通常比福岡博多站便宜，且人潮少、免排退稅長龍，品項最齊全！
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Day 2 Takachiho Guide -->
+      <div class="bg-white rounded-3xl border-2 border-blue-100 shadow-kawaii-sm p-4">
+        <h3 class="text-sm font-bold text-blue-600 flex items-center mb-2">
+          <span class="mr-2">🏔️</span>第二天（11/15 日）高千穗阿蘇出發與行前備忘
+        </h3>
+        <div class="space-y-2 text-xs text-stone-700 font-medium">
+          <p>
+            • <strong>出門時間與集合地點：</strong>建議 <strong>07:05 離開飯店</strong>。步行 2 分鐘至「辛島町」路面電車站，搭乘 A 系統坐 5 站約 14 分鐘至「熊本駅前」，走站內地下通道 3 分鐘至「西口（新幹線口）噴水廣場」；或 07:15 門口招 2 台計程車（約 8 分鐘）。<strong>07:45 集合，08:00 專車準時發車</strong>！
+          </p>
+          <div class="p-2.5 bg-rose-50 border border-rose-200 rounded-2xl text-rose-900">
+            <strong>⚠️ 準備小點心提醒：</strong>高千穗與阿蘇單程車程長達 2–2.5 小時，山區景點多、停留時間緊湊，中午沒有充裕時間吃大餐，出發前強烈建議在車站共構「Seattle's Best Coffee」（07:00 開門）或超商買好飯糰、麵包、餅乾與飲用水隨身攜帶！
+          </div>
+          <p>
+            • <strong>行程憑證連結：</strong><a href="https://www.kkday.com/zh-tw/product/141071" target="_blank" class="text-blue-600 underline font-bold">KKday 高千穗峽＆阿蘇草千里一日遊專屬頁面</a>
+          </p>
+        </div>
+      </div>
+
+      <!-- Day 3 Kagoshima Pass Guide -->
+      <div class="bg-white rounded-3xl border-2 border-blue-100 shadow-kawaii-sm p-4">
+        <h3 class="text-sm font-bold text-blue-600 flex items-center mb-2">
+          <span class="mr-2">🌋</span>第三天（11/16 一）鹿兒島新幹線與 CUTE 一日券全攻略
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs font-medium">
+          <div class="p-3.5 rounded-2xl bg-blue-50/60 border border-blue-100">
+            <p class="font-bold text-stone-900 text-sm mb-1 text-blue-600">1. JR 新幹線班次與 Pass 劃位</p>
+            <p class="text-stone-600 leading-relaxed mb-1.5">
+              • <strong>建議 08:15 飯店出門</strong>，搭市電或計程車至熊本站。<br>
+              • <strong>去程推薦：</strong>Sakura 403 號（熊本 08:57 ➜ 鹿兒島中央 09:44，車程 47 分鐘）。備案：Sakura 401 號 (08:34)、Mizuho 603 號 (09:11)。<br>
+              • <strong>回程推薦：</strong>Mizuho 610 號（鹿兒島中央 19:54 ➜ 熊本 20:38，車程僅 44 分鐘）。備案：Sakura 408 號 (19:35)、Sakura 410 號 (20:13)。<br>
+              • <strong>JR Pass 購買與劃位：</strong>購買「JR 南九州 3 日券」（10,000 日圓，比來回新幹線 14,400 省 4,400 日圓）。抵達熊本站時於綠色窗口出示護照與憑證兌換，並直接由櫃檯站務員免費劃位 5 人指定席座位！
+            </p>
+          </div>
+          <div class="p-3.5 rounded-2xl bg-blue-50/60 border border-blue-100">
+            <p class="font-bold text-stone-900 text-sm mb-1 text-blue-600">2. 鹿兒島市區 CUTE 一日券購買地點</p>
+            <p class="text-stone-600 leading-relaxed">
+              • <strong>購買地點：</strong>搭新幹線抵達 <strong>JR 鹿兒島中央站</strong> 後，出新幹線剪票口至 <strong>站內 2 樓大廳「觀光綜合案內所」櫃檯</strong> 直接購買實體紙本券（大人 1,400 日圓）。<br>
+              • <strong>涵蓋範圍：</strong>全線市電、City View 觀光巴士（直達仙巖園）、<strong>櫻島渡輪（一般航線無限搭乘）</strong>與櫻島 Island View 島內巴士。出示還享仙巖園門票折扣！
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Day 4 Fukuoka Walking Map Guide -->
+      <div class="bg-white rounded-3xl border-2 border-blue-100 shadow-kawaii-sm p-4">
+        <h3 class="text-sm font-bold text-blue-600 flex items-center mb-2">
+          <span class="mr-2">🚶‍♀️</span>第四天（11/17 二）福岡無縫步行地圖（免計程車）
+        </h3>
+        <p class="text-xs text-stone-600 leading-relaxed mb-2 font-medium">
+          博多站下車後直接轉搭地鐵空港線 1 站（約 2 分鐘）到「祇園站」5 號電梯出口，出站直行 2 分鐘抵達 BOUNCEE 飯店放行李，全天步行順路迴圈：
+        </p>
+        <div class="relative pl-5 space-y-2 before:absolute before:left-2 before:top-1.5 before:bottom-1.5 before:w-0.5 before:bg-blue-200 text-xs text-stone-700 font-medium">
+          <div><strong>1. 飯店 ➜ 東長寺（福岡大佛）</strong>：步行約 6 分鐘（約 500m），參觀日本最大木造座像大佛與體驗全黑地獄極樂巡禮。</div>
+          <div><strong>2. 東長寺 ➜ 信州そば むらた（午餐）</strong>：步行約 4 分鐘（約 300m），博多頂級手打蕎麥麵名店。</div>
+          <div><strong>3. 蕎麥麵店 ➜ 櫛田神社</strong>：步行約 2 分鐘（約 150m），參拜博多總鎮守，欣賞巨大飾山笠。</div>
+          <div><strong>4. 櫛田神社 ➜ 博多運河城 ＋ 必買麵包店</strong>：走空中天橋 2 分鐘直達運河城看水舞秀，順訪運河城旁 <a href="https://maps.app.goo.gl/8AEAtuzKSCqEhMyw6" target="_blank" class="text-blue-600 underline font-bold">THE FULL FULL HAKATA 必買現烤明太子法國麵包</a>！</div>
+          <div><strong>5. 運河城 ➜ 前田屋牛雜鍋（17:00 預約）</strong>：沿博多站前二丁目通步行約 6 分鐘（約 400m）抵達。</div>
+          <div><strong>6. 前田屋 ➜ BOUNCEE 飯店</strong>：餐後散步 6 分鐘回飯店 Check-in 入住。</div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- MODAL: CLOUD SYNC CONFIG (Firebase Setup) -->
+  <div id="modal-cloud-config" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-white w-full max-w-md rounded-3xl shadow-xl overflow-hidden border-2 border-blue-100 animate-in fade-in zoom-in-95 duration-150">
+      <div class="px-5 py-3.5 border-b border-blue-100 flex items-center justify-between bg-blue-50/60">
+        <div class="flex items-center space-x-1.5">
+          <span class="text-base">☁️</span>
+          <h3 class="font-bold text-stone-900 text-sm">Google Firebase 雲端即時同步設定</h3>
+        </div>
+        <button id="btn-close-cloud-modal" class="text-stone-400 hover:text-stone-600 p-1">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+      <div class="p-5 space-y-3.5 text-xs">
+        <div class="p-3 bg-emerald-50 rounded-2xl border border-emerald-200 text-[11px] text-emerald-800 space-y-1 font-medium">
+          <p class="font-bold">🔒 安全性完全保障：</p>
+          <p>• 你的專案金鑰已成功配置，資料庫僅記錄旅遊花費與成員暱稱，無任何金融卡號或個人私密資訊，傳輸全程走 Google SSL 加密通道！</p>
+        </div>
+
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">Firebase 設定 (已自動帶入你的專案)</label>
+          <textarea id="firebase-config-input" rows="4" class="w-full px-3 py-2 border-2 border-blue-100 rounded-xl focus:outline-none focus:border-blue-500 font-mono text-[10px] bg-white"></textarea>
+        </div>
+
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">旅行專屬同步房號 (Room Key)</label>
+          <input type="text" id="firebase-room-key" value="kyushu_2026_tour" class="w-full px-3 py-1.5 border-2 border-blue-100 rounded-xl focus:outline-none focus:border-blue-500 font-bold text-stone-800">
+        </div>
+
+        <div class="pt-2 flex justify-between items-center">
+          <div class="flex items-center space-x-3">
+            <button type="button" id="btn-clear-cloud-sync" class="text-[11px] text-stone-400 hover:text-rose-500 underline font-medium">重設回本機</button>
+            <button type="button" id="btn-export-data" class="text-[11px] text-blue-600 hover:text-blue-700 underline font-medium">匯出 JSON 備份</button>
+          </div>
+          <div class="space-x-2">
+            <button type="button" id="btn-cancel-cloud" class="px-3.5 py-1.5 text-stone-500 hover:bg-stone-100 rounded-xl font-bold transition">關閉</button>
+            <button type="button" id="btn-save-cloud" class="px-4 py-1.5 bg-blue-600 hover:bg-blue-600Hover text-white rounded-xl font-bold shadow-kawaii-sm transition">儲存並重新連線</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: ADD / EDIT EXPENSE -->
+  <div id="modal-expense" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-white w-full max-w-md rounded-3xl shadow-xl overflow-hidden border-2 border-blue-100 animate-in fade-in zoom-in-95 duration-150">
+      <div class="px-5 py-3.5 border-b border-blue-100 flex items-center justify-between bg-blue-50/50">
+        <h3 id="modal-expense-title" class="font-bold text-stone-900 text-sm">新增支出項目 💸</h3>
+        <button id="btn-close-expense-modal" class="text-stone-400 hover:text-stone-600 p-1">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+      <form id="form-expense" class="p-5 space-y-3.5 text-xs">
+        <input type="hidden" id="expense-id">
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">支出名稱 *</label>
+          <input type="text" id="expense-title" required placeholder="例如：前田屋牛雜鍋、住宿尾款、KKday 一日遊..." class="w-full px-3 py-2 border-2 border-blue-100 rounded-xl focus:outline-none focus:border-blue-500">
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">金額 *</label>
+            <input type="number" id="expense-amount" required min="1" step="any" placeholder="0" class="w-full px-3 py-2 border-2 border-blue-100 rounded-xl focus:outline-none focus:border-blue-500">
+          </div>
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">幣別</label>
+            <select id="expense-currency" class="w-full px-3 py-2 border-2 border-blue-100 rounded-xl focus:outline-none focus:border-blue-500 bg-white font-bold">
+              <option value="JPY">日圓 (JPY ¥)</option>
+              <option value="TWD">台幣 (TWD NT$)</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">分類</label>
+            <select id="expense-category" class="w-full px-3 py-2 border-2 border-blue-100 rounded-xl focus:outline-none focus:border-blue-500 bg-white">
+              <option value="dining">餐飲美食 (公費優先)</option>
+              <option value="transport">交通接駁/一日遊</option>
+              <option value="hotel">住宿費用</option>
+              <option value="sight">景點門票</option>
+              <option value="shopping">購物採買</option>
+              <option value="other">其他雜支</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">付款方式 / 付款人 *</label>
+            <select id="expense-payer" class="w-full px-3 py-2 border-2 border-blue-100 rounded-xl focus:outline-none focus:border-blue-500 bg-white font-bold text-blue-600">
+              <option value="pool">💳 團隊公費 (Shared Pool)</option>
+              <!-- Dynamically populated from members list -->
+            </select>
+          </div>
+        </div>
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label class="font-bold text-stone-700">參與分攤成員</label>
+            <div class="space-x-2 text-[10px] text-blue-600 font-bold">
+              <button type="button" id="btn-select-all-members" class="hover:underline">全選</button>
+              <span>|</span>
+              <button type="button" id="btn-clear-members" class="hover:underline">全不選</button>
+            </div>
+          </div>
+          <div id="expense-split-members" class="grid grid-cols-2 gap-1.5 p-2.5 bg-blue-50/50 border border-blue-100 rounded-xl max-h-28 overflow-y-auto">
+            <!-- Member Checkboxes -->
+          </div>
+        </div>
+        <div class="pt-2 flex justify-end space-x-2">
+          <button type="button" id="btn-cancel-expense" class="px-3.5 py-2 text-stone-500 hover:bg-stone-100 rounded-xl font-bold transition">取消</button>
+          <button type="submit" class="px-5 py-2 bg-blue-600 hover:bg-blue-600Hover text-white rounded-xl font-bold shadow-kawaii-sm transition">儲存支出</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: COLLECT POOL (收取公費) -->
+  <div id="modal-collect-pool" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-3xl shadow-xl overflow-hidden border-2 border-blue-100 animate-in fade-in zoom-in-95 duration-150">
+      <div class="px-5 py-3.5 border-b border-blue-100 flex items-center justify-between bg-blue-50/60">
+        <h3 class="font-bold text-stone-900 text-sm">向全員收取預備公費 🪙</h3>
+        <button id="btn-close-collect-modal" class="text-stone-400 hover:text-stone-600 p-1">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+      <form id="form-collect-pool" class="p-5 space-y-3.5 text-xs">
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">每人收取金額 *</label>
+          <div class="grid grid-cols-2 gap-2">
+            <input type="number" id="collect-amount" required value="30000" class="px-3 py-2 border-2 border-blue-100 rounded-xl focus:outline-none focus:border-blue-500 font-bold">
+            <select id="collect-currency" class="px-2 py-2 border-2 border-blue-100 rounded-xl bg-white font-bold">
+              <option value="JPY">日圓 (¥)</option>
+              <option value="TWD">台幣 (NT$)</option>
+            </select>
+          </div>
+          <p class="text-[11px] text-stone-400 mt-1.5 font-medium">5 位成員共存入公費水庫：<span id="collect-summary-text" class="font-bold text-blue-600 font-mono text-sm">¥180,000</span></p>
+        </div>
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">收款備註</label>
+          <input type="text" id="collect-desc" value="第一梯次預備公費 (共同餐費與雜支)" class="w-full px-3 py-2 border-2 border-blue-100 rounded-xl focus:outline-none focus:border-blue-500">
+        </div>
+        <div class="pt-2 flex justify-end space-x-2">
+          <button type="button" id="btn-cancel-collect" class="px-3.5 py-2 text-stone-500 hover:bg-stone-100 rounded-xl font-bold transition">取消</button>
+          <button type="submit" class="px-5 py-2 bg-blue-600 hover:bg-blue-600Hover text-white rounded-xl font-bold shadow-kawaii-sm transition">確認全員存入</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: ADD / EDIT NOTE -->
+  <div id="modal-note" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-white w-full max-w-md rounded-3xl shadow-xl overflow-hidden border-2 border-blue-100 animate-in fade-in zoom-in-95 duration-150">
+      <div class="px-5 py-3.5 border-b border-blue-100 flex items-center justify-between bg-blue-50/50">
+        <h3 id="modal-note-title" class="font-bold text-stone-900 text-sm">新增備忘筆記 📝</h3>
+        <button id="btn-close-note-modal" class="text-stone-400 hover:text-stone-600 p-1">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+      <form id="form-note" class="p-5 space-y-3.5 text-xs">
+        <input type="hidden" id="note-id">
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">標題 *</label>
+          <input type="text" id="note-title-input" required placeholder="例如：伴手禮心願單、免稅折扣券..." class="w-full px-3 py-2 border-2 border-blue-100 rounded-xl focus:outline-none focus:border-blue-500">
+        </div>
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">分類標籤</label>
+          <select id="note-category-input" class="w-full px-3 py-2 border-2 border-blue-100 rounded-xl focus:outline-none focus:border-blue-500 bg-white">
+            <option value="shopping">伴手禮與購物</option>
+            <option value="food">美食名單</option>
+            <option value="notice">重要提醒</option>
+            <option value="other">一般記事</option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">內容詳細說明 *</label>
+          <textarea id="note-content-input" rows="3" required placeholder="寫下任何詳細紀錄、店家地址、必買規格、連結等..." class="w-full px-3 py-2 border-2 border-blue-100 rounded-xl focus:outline-none focus:border-blue-500"></textarea>
+        </div>
+        <div class="pt-2 flex justify-end space-x-2">
+          <button type="button" id="btn-cancel-note" class="px-3.5 py-2 text-stone-500 hover:bg-stone-100 rounded-xl font-bold transition">取消</button>
+          <button type="submit" class="px-5 py-2 bg-blue-600 hover:bg-blue-600Hover text-white rounded-xl font-bold shadow-kawaii-sm transition">儲存筆記</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 bg-stone-900/90 backdrop-blur text-white text-xs px-4 py-3 rounded-2xl shadow-xl transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none flex items-center space-x-2 border border-sky-300/30">
+    <i id="toast-icon" class="fa-solid fa-heart text-blue-500"></i>
+    <span id="toast-message" class="font-bold">操作成功</span>
+  </div>
+
+  <!-- Script with Application State and Handlers -->
+  <script>
+    // --- 6 Members Updated ---
+    const MEMBERS = [
+      { id: 'm1', name: '小婷', avatar: '🌸' },
+      { id: 'm2', name: '朱大哥', avatar: '👔' },
+      { id: 'm3', name: '珍姐', avatar: '✈️' },
+      { id: 'm4', name: '枝枝', avatar: '🍓' },
+      { id: 'm5', name: '小姨丈', avatar: '🎩' },
+    ];
+
+    const DEFAULT_FIREBASE_CONFIG = {
+      apiKey: "AIzaSyD8Cjgf9DeRDhPNT_Oz9vVlPhC6bsOm-BY",
+      authDomain: "kyushu-2026.firebaseapp.com",
+      projectId: "kyushu-2026",
+      storageBucket: "kyushu-2026.firebasestorage.app",
+      messagingSenderId: "974359667247",
+      appId: "1:974359667247:web:6c79eb010cbb1401191cda",
+      measurementId: "G-KN1L6J7WDJ",
+      databaseURL: "https://kyushu-2026-default-rtdb.firebaseio.com"
+    };
+
+    const ITINERARY_DATA = [
+      {
+        day: 1,
+        date: '2026/11/14 (六)',
+        city: '熊本',
+        title: '抵達熊本・SAKURA MACHI・登天守閣與地雞炭火炙燒',
+        items: [
+          { time: '11/13 23:20', stay: '車程 3.5-4 小時', title: '台南出發組集合完成・夜車出發', tag: 'transport', desc: '台南組 23:20 準時集合完畢，專車/夜車出發前往桃園機場第二航廈，約 03:00–03:30 抵達桃機 T2。' },
+          { time: '03:00', stay: '車程 45 分鐘', title: '台北出發組出發前往桃園機場', tag: 'transport', desc: '台北組 03:00 出發前往桃園機場第二航廈，車程約 40–50 分鐘，約 03:45 於桃機 T2 華航報到櫃檯前與台南組會合。' },
+          { time: '05:50', stay: '飛行 2 小時', title: '中華航空 CI394 起飛 ➜ 抵達熊本 08:50', tag: 'transport', desc: '【班機資訊】起飛 05:50 台北桃園 (TPE) 第二航廈 (Terminal 2) ➜ 抵達 08:50 (日本時間) 熊本機場 (KMJ)。機型 Airbus A321neo，飛行時間剛好 2 小時。' },
+          { time: '09:15', stay: '車程約 50 分鐘', title: '熊本機場搭利木津巴士直達櫻町總站', tag: 'transport', desc: '【搭車指南】出關後前往 1F 戶外 4 號站牌（4番のりば）搭乘「九州產交機場利木津巴士（往熊本駅前方向）」。可在站牌旁自動售票機購票（大人單程 1,000 日圓），或上下車直接刷 IC 卡（Suica/ICOCA等）或信用卡感應支付。直達「櫻町巴士總站（桜町バスターミナル）」。' },
+          { time: '10:30', stay: '停留 20 分鐘', title: '光芒飯店 熊本新市街寄放大行李', tag: 'hotel', desc: '從櫻町巴士總站穿過辛島公園與辛島町拱廊街，步行約 5 分鐘（約 400m）抵達光芒飯店櫃檯寄放大件行李，輕裝展開行程。' },
+          { time: '11:00', stay: '停留 1 小時 15 分鐘', title: 'SAKURA MACHI 櫻町熊本商場逛街', tag: 'shopping', desc: '【商場介紹】熊本市區巨型複合商場：走訪 5 樓頂樓空中空中花園打卡「超巨型巨大熊本熊雕像」、逛 B1 熊本伴手禮名產街與生鮮超市，商場內有 GU、H&M、Mont-bell、3COINS。' },
+          { time: '12:15', stay: '停留 1 小時 15 分鐘', title: '櫻之馬場 城彩苑（午餐）', tag: 'dining', desc: '【景點介紹】江戶風情歷史體驗街區，品嚐菅乃屋現炸馬肉可樂餅、熊本熊人形燒與現炸芥末蓮藕小吃。' },
+          { time: '13:30', stay: '停留 2 小時', title: '熊本城天守閣登頂參觀', tag: 'sight', desc: '【名勝介紹】日本三大名城之一，加藤清正建造。登頂天守閣俯瞰熊本全景，參觀震後修復的本丸御殿、大小天守與武者返石垣。' },
+          { time: '16:00', stay: '停留 1 小時', title: '光芒飯店辦理入住稍作休息', tag: 'hotel', desc: '雙床房 3 間正式辦理入住，可上頂樓體驗露天 SkySpa 溫泉與三溫暖消除早起疲勞。' },
+          { time: '17:30', stay: '停留 2 小時', title: 'バードマン 銀座通り店 (Birdman) [已預約]', tag: 'dining', desc: '【已預約席位 (原訂6席/暫5人前往)】熊本市中央區中央街 1-1，品嚐招牌炭火烤地雞、名物烤雞串燒盛合與在地小菜。' },
+          { time: '19:30', stay: '停留 2 小時', title: '新市街・下通商圈採買【藥妝強烈建議在熊本買齊】', tag: 'shopping', desc: '【重要備忘】熊本下通商圈的大國藥妝（Daikoku）、松本清、Sundrug、Cosmos 密度極高競爭激烈，促銷折扣與免稅價通常比福岡博多站便宜，且人潮較少不用排隊退稅，強烈建議今晚買齊！' }
+        ]
+      },
+      {
+        day: 2,
+        date: '2026/11/15 (日)',
+        city: '阿蘇・高千穗',
+        title: '高千穗峽谷神話・天空小火車與阿蘇草千里一日遊',
+        items: [
+          { time: '07:05', stay: '車程約 15 分鐘', title: '飯店出發前往熊本車站西口（詳細動線）', tag: 'transport', desc: '【07:05 準時出發】集合地點為熊本站西口噴水廣場。【方式A (路面電車)】：步行 2 分鐘到「辛島町」搭市電 A 系統 5 站約 14 分鐘至「熊本駅前」，走站內地下通道 3 分鐘至西口噴水廣場（車資 180 日圓）。【方式B (計程車)】：07:15 門口搭 2 台計程車約 8 分鐘直達（約 1,000 日圓/台）。' },
+          { time: '07:20', stay: '停留 20 分鐘', title: '熊本站 07:00 開門早餐推薦（準備車上乾糧）', tag: 'dining', desc: '【7點開門早餐】熊本車站肥後よかもん市場內「Seattle\'s Best Coffee」（07:00 開門，熱壓三明治與咖啡）或站內 FamilyMart 便利商店。⚠️【必看提醒】高千穗阿蘇車程長達 2-2.5 小時，行程偏趕且中午無充裕時間吃大餐，出發前強烈建議在此買好飯糰、麵包、餅乾與飲用水隨身帶上車充飢！' },
+          { time: '07:45', stay: '專車一日遊', title: 'KKday 專車集合出發 (08:00 準時發車)', tag: 'transport', desc: '集合地點：熊本車站西口噴水廣場。行程參考連結：https://www.kkday.com/zh-tw/product/141071' },
+          { time: '10:00', stay: '停留 1 小時 30 分鐘', title: '高千穗峽谷漫步', tag: 'sight', desc: '【神話名勝】柱狀節理玄武岩斷崖壯景，近距離欣賞真名井瀑布、鬼八之力石，步道漫步約 20-30 分鐘拍照。' },
+          { time: '11:40', stay: '停留 40 分鐘', title: '天照鐵道天空小火車', tag: 'transport', desc: '【特色體驗】搭乘無頂棚敞篷小火車行駛於 105 米高鐵橋之上（現場購票 2,300 日圓；若停運則參訪上色見熊野座神社）。' },
+          { time: '13:30', stay: '停留 1 小時', title: '草千里之濱大草原', tag: 'sight', desc: '【自然絕景】阿蘇火山口遺跡形成的遼闊大草原，遠眺阿蘇中岳火山升騰的壯麗白煙與倒映池。' },
+          { time: '18:00', stay: '返抵市區', title: '專車平安返抵熊本站西口', tag: 'transport', desc: '一日遊專車平安返回熊本站。' },
+          { time: '18:30', stay: '停留 1 小時 30 分鐘', title: '晚餐：熊本站美食街自由品嚐【無預訂・推薦推薦】', tag: 'dining', desc: '【無預訂，自由推薦】推薦熊本站商場「肥後よかもん市場」美食街：首推焦香蒜油「黑亭拉麵」、元祖「桂花拉麵」或名物「菅乃屋」馬肉定食；吃完搭路面電車返回新市街光芒飯店。' }
+        ]
+      },
+      {
+        day: 3,
+        date: '2026/11/16 (一)',
+        city: '鹿兒島一日遊',
+        title: '新幹線直奔鹿兒島一日遊・櫻島仙巖園與薩摩黑毛和牛燒肉',
+        items: [
+          { time: '08:15', stay: '車程約 15 分鐘', title: '飯店出門前往熊本車站', tag: 'transport', desc: '【08:15 飯店出門】步行至辛島町搭市電 A 系統約 14 分鐘到熊本駅前，或門口搭計程車約 8 分鐘直達熊本站新幹線口。' },
+          { time: '08:57', stay: '車程 47 分鐘', title: '九州新幹線前往鹿兒島中央（推薦班次與劃位指南）', tag: 'transport', desc: '【去程推薦】首選 Sakura 403 號（熊本 08:57 發 ➜ 鹿兒島中央 09:44 到，車程 47 分鐘）；備案 Sakura 401 號 (08:34)、Mizuho 603 號 (09:11)。【JR Pass 劃位】：購買「JR 南九州 3 日券（10,000 日圓，來回原價 14,400 現省 4,400 日圓）」，於綠色窗口兌換並免費劃位 5 人指定席座位！' },
+          { time: '09:50', stay: '停留 15 分鐘', title: '鹿兒島中央站購買 CUTE 一日券', tag: 'transport', desc: '【購買地點】：抵達 JR 鹿兒島中央站後，出檢票口至【站內 2 樓大廳觀光綜合案內所】購買紙本票券（大人 1,400 日圓）。無限搭乘市電、City View 觀光巴士、櫻島渡輪與島內巴士，出示享仙巖園門票折扣！' },
+          { time: '10:15', stay: '停留 2 小時 15 分鐘', title: '仙巖園（磯庭園）', tag: 'sight', desc: '【名勝介紹】鹿兒島中央站搭 City View 巴士直達。島津氏別邸，名園借景錦江灣與櫻島火山，品嚐現烤兩棒餅。' },
+          { time: '12:45', stay: '停留 1 小時 15 分鐘', title: '天文館商圈午餐與白熊冰', tag: 'dining', desc: '搭 City View 巴士至天文館。品嚐正宗黑豚炸豬排（壽庵或川久），隨後走訪「天文館無邪氣」本店品嚐白熊刨冰。' },
+          { time: '14:15', stay: '停留 2 小時', title: '櫻島渡輪登島・火山熔岩足湯體驗', tag: 'sight', desc: '搭市電至水族館口步行至碼頭，持 CUTE 券搭渡輪 15 分鐘登島，體驗熔岩海濱公園免費足湯與月讀神社。' },
+          { time: '17:30', stay: '停留 2 小時', title: '焼肉 薩摩ホルモン舗 [已預約]', tag: 'dining', desc: '【已預約席位 (原訂6席/暫5人前往)】鹿兒島中央町，品嚐鹿兒島在地薩摩黑毛和牛燒肉盛合與特選新鮮內臟。' },
+          { time: '19:54', stay: '車程 44 分鐘', title: '九州新幹線返回熊本（推薦班次）', tag: 'transport', desc: '【回程推薦】首選 Mizuho 610 號（鹿兒島中央 19:54 發 ➜ 熊本 20:38 到，僅 44 分鐘！）；備案 Sakura 408 號 (19:35)。返抵熊本轉市電回光芒飯店新市街泡湯放鬆。' }
+        ]
+      },
+      {
+        day: 4,
+        date: '2026/11/17 (二)',
+        city: '福岡博多',
+        title: '新幹線移師福岡・東長寺大佛・信州蕎麥麵・櫛田神社・運河城與必買明太子麵包',
+        items: [
+          { time: '09:30', stay: '車程約 20 分鐘', title: '退房出發搭市電前往熊本站（不搭計程車）', tag: 'transport', desc: '【不搭計程車】光芒飯店退房，步行 2 分鐘至「辛島町」搭熊本市電 A 系統約 14 分鐘直達「熊本駅前」新幹線口。' },
+          { time: '10:25', stay: '車程 38 分鐘', title: '九州新幹線直達博多站', tag: 'transport', desc: '搭乘九州新幹線 Sakura 550 號（熊本 10:25 發 ➜ 博多 11:03 到，車程 38 分鐘；備案 Sakura 404 號 10:47 發）。' },
+          { time: '11:15', stay: '車程 2 分鐘 + 步行 2 分鐘', title: '博多搭地鐵空港線至祇園站 ➜ 飯店寄放行李', tag: 'transport', desc: '【搭地鐵方案】博多站搭地下鐵空港線 1 站（2分鐘）至「祇園站」，從【5 號出口（設有雙向無障礙電梯）】出站直行 2 分鐘抵達 BOUNCEE by RIHGA 飯店寄放大行李！全程免搭計程車。' },
+          { time: '11:45', stay: '停留 45 分鐘', title: '東長寺（福岡大佛）', tag: 'sight', desc: '【從飯店步行約 6 分鐘（約 500m）】真言宗名剎，參拜高 10.8 公尺日本最大木造座像大佛（Giant wooden buddha）與體驗全黑地獄極樂巡禮通道。' },
+          { time: '12:35', stay: '停留 1 小時 15 分鐘', title: '午餐：信州そば むらた', tag: 'dining', desc: '【從東長寺步行約 4 分鐘（約 300m）】博多頂級手打蕎麥麵名店（冷泉町本店），品嚐石臼手工十割/二八蕎麥麵、天婦羅蒸籠蕎麥與鴨肉南蠻。' },
+          { time: '14:00', stay: '停留 45 分鐘', title: '櫛田神社參拜', tag: 'sight', desc: '【從蕎麥麵店步行約 2 分鐘（約 150m）】博多總鎮守，參拜保佑旅程平安，近距離欣賞常設巨型飾山笠。' },
+          { time: '14:50', stay: '停留 2 小時', title: '博多運河城 ＋ 必買麵包店（THE FULL FULL HAKATA）', tag: 'shopping', desc: '【走天橋 2 分鐘直達運河城】看水舞秀，重點逛 Alpen 戶外旗艦店。順道前往運河城旁 <a href="https://maps.app.goo.gl/8AEAtuzKSCqEhMyw6" target="_blank" class="text-blue-600 underline font-bold">必買麵包店 (THE FULL FULL HAKATA)</a> 採買剛出爐招牌「明太子法國麵包」！' },
+          { time: '17:00', stay: '停留 2 小時', title: '博多もつ鍋前田屋 博多店 [已預約]', tag: 'dining', desc: '【運河城步行約 6 分鐘】博多駅前 3-26-5，已預約 6 位，品嚐名物極品白味噌牛腸鍋、胡麻鯖魚生魚片與明太子小菜。' },
+          { time: '19:30', stay: '步行 6 分鐘', title: '步行回 BOUNCEE 飯店 Check-in 入住', tag: 'hotel', desc: '餐後散步 6 分鐘回飯店正式入住客房，晚間可就近漫步中洲河畔欣賞屋台。' }
+        ]
+      },
+      {
+        day: 5,
+        date: '2026/11/18 (三)',
+        city: '福岡郊區・博多',
+        title: '秋月城跡賞楓・麒麟啤酒見學・博多伴手禮採買與串燒居酒屋',
+        items: [
+          { time: '07:30', stay: '車程 2 分鐘', title: '飯店出發搭地鐵至博多站', tag: 'transport', desc: '祇園站搭地鐵空港線 1 站（或沿大博通步行 10 分鐘）至博多站。' },
+          { time: '07:45', stay: '停留 40 分鐘', title: '博多車站早餐推薦（07:00 開門名店）', tag: 'dining', desc: '【早餐推薦】博多站 B1「博多 1 番街」人氣「たんや HAKATA」（07:00 開門，炭烤牛舌早餐定食），或 1F 改札口旁「TRANDOR」（06:00 開門，現烤半熟蛋咖哩麵包）。' },
+          { time: '08:35', stay: '專車一日遊', title: 'KKday YokaBus 一日遊出發 (08:45 發車)', tag: 'transport', desc: '【集合出發】博多站筑紫口集合（訂單 26KK217864002），08:45 準時發車。' },
+          { time: '10:00', stay: '停留 1 小時 30 分鐘', title: '麒麟啤酒福岡工廠見學', tag: 'sight', desc: '啤酒製程參觀見學與一番搾原味生啤酒試飲。' },
+          { time: '12:15', stay: '停留 2 小時 15 分鐘', title: '筑前小京都「秋月城跡」賞楓', tag: 'sight', desc: '漫步黑門紅葉隧道與杉之馬場林道，古城石垣楓紅如畫。' },
+          { time: '15:15', stay: '停留 1 小時 30 分鐘', title: '英彥山斜坡登山纜車', tag: 'sight', desc: '搭乘單軌纜車登臨神聖靈山眺望秋日山色。' },
+          { time: '18:00', stay: '停留 1 小時', title: '返抵博多站 ＆ 博多伴手禮推薦採買', tag: 'shopping', desc: '【博多站伴手禮推薦】博多站 1F「マイング」名產街一次買齊：1. 福砂屋長崎蛋糕（底層砂糖顆粒）；2. 努努雞（冷吃炸雞翅）；3. Menbei 明太子仙貝；4. 博多通りもん西洋饅頭。' },
+          { time: '19:00', stay: '停留 2 小時', title: '鳥っち 博多駅筑紫口店 [已預約]', tag: 'dining', desc: '【已預約席位 (原訂6席/暫5人前往)】筑紫口步行 2 分鐘，品嚐炭火地雞串燒與居酒屋料理。' }
+        ]
+      },
+      {
+        day: 6,
+        date: '2026/11/19 (四)',
+        city: '太宰府・天神・博多',
+        title: '太宰府早起參拜・明太子午餐・寶可夢中心・自由購物與全體晚餐',
+        items: [
+          { time: '08:00', stay: '車程約 35 分鐘', title: '早起出發搭西鐵前往太宰府', tag: 'transport', desc: '【08:00 提早出門避開人潮】祇園搭地鐵至天神站，轉搭西鐵天神大牟田線（特急）至西鐵二日市轉太宰府線至太宰府站。' },
+          { time: '08:45', stay: '停留 2 小時 30 分鐘', title: '太宰府天滿宮參道與參拜', tag: 'sight', desc: '【名勝介紹】參拜隈研吾設計假殿，參道吃剛出爐熱呼呼梅枝餅（推薦「かさの家」）、明太子仙貝、隈研吾星巴克概念店。' },
+          { time: '11:30', stay: '車程約 35 分鐘', title: '西鐵返回福岡市區天神', tag: 'transport', desc: '搭西鐵返回天神站。' },
+          { time: '12:15', stay: '停留 1 小時 15 分鐘', title: '明太子料理推薦：元祖博多めんたい重', tag: 'dining', desc: '【明太子名店】西中洲名店，品嚐全日本第一家明太子料理專門店！招牌「めんたい重（昆布卷明太子便當）」與明太子沾麵。' },
+          { time: '14:00', stay: '停留 1 小時 15 分鐘', title: '寶可夢中心採購卡包 (Pokémon Center Fukuoka)', tag: 'shopping', desc: '【卡包任務】位於 JR 博多城 AMU PLAZA 8 樓！採購最新日版寶可夢集換式卡牌卡包（Pokemon Booster Packs）與周邊卡套。' },
+          { time: '15:30', stay: '停留 3 小時', title: '多樣化購物地點自由行動（4大選項）', tag: 'shopping', desc: '【自由購物分組】：選項A-天神岩田屋（名牌精品CDG/化妝品）；選項B-天神地下街（日系生活雜貨女裝）；選項C-大名潮牌街區（Supreme/Human Made/古著）；選項D-BicCamera天神館/友都八喜（電器相機）。' },
+          { time: '18:30', stay: '停留 2 小時', title: '全體集合晚餐時間【18:30 準時集合】', tag: 'dining', desc: '【全員合流】推薦享用博多頂級水瀧雞肉鍋「博多華味鳥」（濃郁雞白湯水炊き）或博多站名店，回顧旅途趣事。' },
+          { time: '20:45', stay: '停留 1 小時 30 分鐘', title: '最後採買地點：唐吉訶德 中洲店（24小時）', tag: 'shopping', desc: '【最後補貨衝刺】中洲 gate\'s 大樓 2F，全福岡最大旗艦店之一，24 小時營業，零食藥妝伴手禮一次買齊，步行回飯店僅 8 分鐘！' }
+        ]
+      },
+      {
+        day: 7,
+        date: '2026/11/20 (五)',
+        city: '福岡 ➜ 返台',
+        title: '輕鬆退房搭地鐵前往福岡機場・滿載戰利品平安返台',
+        items: [
+          { time: '08:30', stay: '停留 15 分鐘', title: 'BOUNCEE 飯店辦理退房', tag: 'hotel', desc: '檢查隨身護照、錢包與所有戰利品行李。' },
+          { time: '08:45', stay: '車程約 20 分鐘', title: '搭乘地下鐵前往福岡機場（地鐵＋接駁車）', tag: 'transport', desc: '【搭地鐵動線】祇園站搭地下鐵空港線直達終點「福岡空港站」（約 6 分鐘），出站後搭乘【免費國內外線連絡接駁巴士】（約 10-12 分鐘）直達國際線航廈 (FUK TI)！' },
+          { time: '09:30', stay: '停留 2 小時', title: '華航 CI139 報到出境與免稅店採買', tag: 'shopping', desc: '託運行李過安檢，免稅店採買福砂屋長崎蛋糕、明太子仙貝與努努雞。' },
+          { time: '11:40', stay: '飛行 3 小時 5 分', title: '搭乘 CI139 起飛返抵高雄小港 13:45', tag: 'transport', desc: '13:45 順利返抵高雄小港機場 (KHH TI)，結束精彩豐富的九州秋日之旅！' }
+        ]
+      }
+    ];
+
+    const DEFAULT_EXPENSES = [
+      { id: 'e1', title: '預收第一梯次公費 (每人¥30,000)', amount: 180000, currency: 'JPY', category: 'pool_in', payer: 'pool', splitMembers: ['m1','m2','m3','m4','m5'], date: '出發前' },
+      { id: 'e2', title: '高千穗阿蘇一日遊 (小婷先代墊)', amount: 36000, currency: 'JPY', category: 'transport', payer: 'm1', splitMembers: ['m1','m2','m3','m4','m5'], date: '2026/11/15' },
+      { id: 'e3', title: '前田屋牛雜鍋 (公費支付預估)', amount: 24000, currency: 'JPY', category: 'dining', payer: 'pool', splitMembers: ['m1','m2','m3','m4','m5'], date: '2026/11/17' },
+      { id: 'e4', title: '信州そば むらた 午餐 (公費支付預估)', amount: 15000, currency: 'JPY', category: 'dining', payer: 'pool', splitMembers: ['m1','m2','m3','m4','m5'], date: '2026/11/17' }
+    ];
+
+    const DEFAULT_NOTES = [
+      { id: 'n1', title: '伴手禮心願單', category: 'shopping', content: '1. 福砂屋長崎蛋糕 (底層有粗砂糖顆粒)\n2. 努努雞 (冷吃炸雞翅，博多站マイング或機場買)\n3. 山屋或福太郎明太子仙貝 (Menbei)\n4. 博多通りもん (西洋饅頭)\n5. 熊本蜂樂饅頭' },
+      { id: 'n2', title: '明太子美食打卡推薦', category: 'food', content: '1. THE FULL FULL HAKATA：明太子法國麵包 (飯店旁運河城)\n2. 元祖博多めんたい重：昆布卷明太子盒飯 (西中洲)\n3. たんや / 喜水丸：博多1番街明太子早餐定食\n4. やまや：軟管明太子伴手禮' },
+      { id: 'n3', title: '交通省錢票券整理', category: 'notice', content: '1. 11/16 鹿兒島：JR 南九州 3 日券 (10,000 日圓) 來回新幹線省 4,400 日圓！\n2. 鹿兒島 CUTE 一日券：1,400 日圓包辦市電、City View、櫻島渡輪。\n3. 福岡最後一天去機場：搭地鐵空港線至福岡空港轉免費航廈接駁車！' },
+      { id: 'n4', title: '寶可夢中心卡包任務', category: 'shopping', content: '地點：JR 博多城 AMU PLAZA 8F (Pokemon Center Fukuoka)。幫忙採購日版最新集換式卡牌卡包與周邊卡套！' }
+    ];
+
+    const DEFAULT_CHECKLIST = [
+      { id: 'c1', text: '護照（效期 6 個月以上）', done: true },
+      { id: 'c2', text: 'Visit Japan Web 填寫完成與截圖 QR Code', done: false },
+      { id: 'c3', text: '預先收取每人公費 (現金/轉帳)', done: false },
+      { id: 'c4', text: '日幣現金與海外高回饋信用卡/雙幣卡', done: true },
+      { id: 'c5', text: '出國網卡 / eSIM 安裝確認', done: false },
+      { id: 'c6', text: '高千穗與 YokaBus 一日遊憑證存入手機', done: true },
+      { id: 'c7', text: '行動電源 (隨身行李) 與日規充電頭', done: false },
+      { id: 'c8', text: '個人常備藥品 (腸胃藥、止痛藥、暈車藥)', done: false },
+      { id: 'c9', text: '高千穗一日遊車上乾糧小點心 (當日熊本站備妥)', done: false }
+    ];
+
+    // --- State Management ---
+    let state = {
+      currentTab: 'itinerary',
+      currentDay: '1',
+      currentTag: 'all',
+      exchangeRate: 0.21,
+      members: MEMBERS,
+      expenses: DEFAULT_EXPENSES,
+      notes: DEFAULT_NOTES,
+      checklist: DEFAULT_CHECKLIST,
+      firebaseConfig: DEFAULT_FIREBASE_CONFIG,
+      firebaseRoom: 'kyushu_2026_tour',
+      isFirebaseConnected: false
+    };
+
+    let dbRef = null;
+
+    function loadState() {
+      try {
+        const savedExpenses = localStorage.getItem('kyushu_expenses_v6');
+        if (savedExpenses) state.expenses = JSON.parse(savedExpenses);
+        const savedNotes = localStorage.getItem('kyushu_notes_v6');
+        if (savedNotes) state.notes = JSON.parse(savedNotes);
+        const savedChecklist = localStorage.getItem('kyushu_checklist_v6');
+        if (savedChecklist) state.checklist = JSON.parse(savedChecklist);
+        const savedRate = localStorage.getItem('kyushu_rate_v6');
+        if (savedRate) {
+          state.exchangeRate = parseFloat(savedRate) || 0.21;
+          document.getElementById('input-exchange-rate').value = state.exchangeRate;
+        }
+        const savedFb = localStorage.getItem('kyushu_fb_config_v6');
+        if (savedFb) {
+          state.firebaseConfig = JSON.parse(savedFb);
+        } else {
+          state.firebaseConfig = DEFAULT_FIREBASE_CONFIG;
+        }
+        document.getElementById('firebase-config-input').value = JSON.stringify(state.firebaseConfig, null, 2);
+
+        const savedRoom = localStorage.getItem('kyushu_fb_room_v6');
+        if (savedRoom) {
+          state.firebaseRoom = savedRoom;
+          document.getElementById('firebase-room-key').value = savedRoom;
+        }
+      } catch (e) {
+        console.warn('LocalStorage load failed:', e);
+      }
+    }
+
+    function saveState(pushToCloud = true) {
+      try {
+        localStorage.setItem('kyushu_expenses_v6', JSON.stringify(state.expenses));
+        localStorage.setItem('kyushu_notes_v6', JSON.stringify(state.notes));
+        localStorage.setItem('kyushu_checklist_v6', JSON.stringify(state.checklist));
+        localStorage.setItem('kyushu_rate_v6', state.exchangeRate.toString());
+      } catch (e) {
+        console.warn('LocalStorage save failed:', e);
+      }
+
+      if (pushToCloud && state.isFirebaseConnected && dbRef) {
+        try {
+          dbRef.set({
+            expenses: state.expenses,
+            notes: state.notes,
+            checklist: state.checklist,
+            exchangeRate: state.exchangeRate,
+            updatedAt: Date.now()
+          });
+        } catch (err) {
+          console.warn('Cloud sync push failed:', err);
+        }
+      }
+    }
+
+    // --- Firebase Realtime Database Sync Engine ---
+    function initFirebaseSync() {
+      if (!state.firebaseConfig) return;
+      try {
+        if (!firebase.apps.length) {
+          firebase.initializeApp(state.firebaseConfig);
+        }
+        const db = firebase.database();
+        const room = state.firebaseRoom || 'kyushu_2026_tour';
+        dbRef = db.ref('trips/' + room);
+
+        // Listen for remote updates in real-time
+        dbRef.on('value', (snapshot) => {
+          const val = snapshot.val();
+          if (val) {
+            if (val.expenses) state.expenses = val.expenses;
+            if (val.notes) state.notes = val.notes;
+            if (val.checklist) state.checklist = val.checklist;
+            if (val.exchangeRate) {
+              state.exchangeRate = val.exchangeRate;
+              document.getElementById('input-exchange-rate').value = val.exchangeRate;
+            }
+            saveState(false); // save locally without bouncing back
+            renderExpenses();
+            renderNotes();
+          }
+        }, (error) => {
+          console.warn('Database permission/not created warning:', error);
+          const badge = document.getElementById('sync-status-badge');
+          const text = document.getElementById('sync-status-text');
+          badge.className = 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-700 flex items-center space-x-1';
+          text.textContent = '等待資料庫啟用';
+        });
+
+        state.isFirebaseConnected = true;
+        const badge = document.getElementById('sync-status-badge');
+        const text = document.getElementById('sync-status-text');
+        badge.className = 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700 flex items-center space-x-1';
+        text.textContent = '雲端即時同步中';
+      } catch (err) {
+        console.warn('Firebase init error:', err);
+        state.isFirebaseConnected = false;
+        const badge = document.getElementById('sync-status-badge');
+        const text = document.getElementById('sync-status-text');
+        badge.className = 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-700 flex items-center space-x-1';
+        text.textContent = '本機模式';
+      }
+    }
+
+    // --- UI Toast ---
+    function showToast(msg, isSuccess = true) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toast-message');
+      const toastIcon = document.getElementById('toast-icon');
+      toastMsg.textContent = msg;
+      toastIcon.className = isSuccess ? 'fa-solid fa-heart text-blue-500' : 'fa-solid fa-circle-exclamation text-amber-400';
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 2500);
+    }
+
+    // --- Tab Switching ---
+    function switchTab(tabId) {
+      state.currentTab = tabId;
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      const activeContent = document.getElementById(`tab-${tabId}`);
+      if (activeContent) activeContent.classList.remove('hidden');
+
+      document.querySelectorAll('.nav-tab').forEach(btn => {
+        if (btn.dataset.tab === tabId) {
+          btn.className = 'nav-tab px-3.5 py-2 text-xs sm:text-sm font-bold rounded-xl text-white bg-blue-600 shadow-sm flex items-center space-x-1.5 transition flex-shrink-0';
+        } else {
+          btn.className = 'nav-tab px-3.5 py-2 text-xs sm:text-sm font-bold rounded-xl text-stone-500 hover:text-blue-600 hover:bg-blue-50 flex items-center space-x-1.5 transition flex-shrink-0';
+        }
+      });
+
+      if (tabId === 'expenses') renderExpenses();
+      if (tabId === 'notes') renderNotes();
+    }
+
+    // --- Tag Helper ---
+    function getTagBadge(tag) {
+      switch(tag) {
+        case 'dining': return '<span class="px-2 py-0.5 rounded-lg text-[10px] font-bold bg-rose-50 text-rose-600 border border-rose-200">🍰 美食餐廳</span>';
+        case 'sight': return '<span class="px-2 py-0.5 rounded-lg text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200">⛩️ 名勝景點</span>';
+        case 'shopping': return '<span class="px-2 py-0.5 rounded-lg text-[10px] font-bold bg-blue-50 text-blue-600 border border-blue-200">🛍️ 購物採買</span>';
+        case 'transport': return '<span class="px-2 py-0.5 rounded-lg text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">🚆 交通接駁</span>';
+        case 'hotel': return '<span class="px-2 py-0.5 rounded-lg text-[10px] font-bold bg-purple-50 text-purple-600 border border-purple-200">🏨 飯店住宿</span>';
+        default: return '<span class="px-2 py-0.5 rounded-lg text-[10px] font-bold bg-stone-100 text-stone-700 border border-stone-200">活動</span>';
+      }
+    }
+
+    // --- Render Itinerary with Daily Tabs ---
+    function renderItinerary() {
+      const container = document.getElementById('itinerary-container');
+      container.innerHTML = '';
+
+      const filteredDays = ITINERARY_DATA.filter(d => state.currentDay === 'all' || d.day.toString() === state.currentDay);
+
+      filteredDays.forEach(dayPlan => {
+        let items = dayPlan.items;
+        if (state.currentTag !== 'all') {
+          items = items.filter(it => it.tag === state.currentTag);
+        }
+
+        if (items.length === 0) return;
+
+        const dayCard = document.createElement('div');
+        dayCard.className = 'bg-white rounded-3xl border-2 border-blue-100 shadow-kawaii-sm overflow-hidden mb-4';
+
+        let itemsHtml = items.map((it, idx) => `
+          <div class="p-4 flex items-start space-x-3.5 hover:bg-blue-50/30 transition ${idx < items.length - 1 ? 'border-b border-blue-50' : ''}">
+            <div class="w-16 flex-shrink-0 text-center pt-0.5">
+              <span class="text-xs font-bold font-mono text-blue-600 block leading-tight">${it.time}</span>
+              ${it.stay ? `<span class="inline-block mt-1.5 px-1.5 py-0.5 text-[9px] font-bold bg-blue-100/70 text-blue-600 rounded-md">${it.stay}</span>` : ''}
+            </div>
+            <div class="flex-grow">
+              <div class="flex flex-wrap items-center gap-1.5 mb-1.5">
+                <h4 class="text-xs sm:text-sm font-bold text-stone-900">${it.title}</h4>
+                ${getTagBadge(it.tag)}
+              </div>
+              <p class="text-xs text-stone-600 leading-relaxed">${it.desc}</p>
+            </div>
+          </div>
+        `).join('');
+
+        dayCard.innerHTML = `
+          <div class="px-4 py-3 bg-gradient-to-r from-blue-50 to-white border-b border-blue-100 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <span class="px-2.5 py-0.5 text-xs font-bold rounded-lg bg-blue-600 text-white shadow-sm">Day ${dayPlan.day}</span>
+              <span class="text-xs font-bold text-stone-800">${dayPlan.date} ｜ ${dayPlan.city}</span>
+            </div>
+            <h3 class="text-xs font-bold text-blue-500 hidden sm:block">${dayPlan.title}</h3>
+          </div>
+          <div>${itemsHtml}</div>
+        `;
+
+        container.appendChild(dayCard);
+      });
+
+      if (container.children.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-10 bg-white rounded-3xl border-2 border-blue-100 p-4">
+            <span class="text-3xl block mb-1">🌸</span>
+            <p class="text-stone-400 text-xs font-bold">目前選取的天數或篩選條件下沒有行程項目</p>
+          </div>
+        `;
+      }
+    }
+
+    // --- Expense & Shared Pool Calculation ---
+    function calculateBalances() {
+      const rate = state.exchangeRate;
+      let totalSpentJPY = 0;
+      let poolInJPY = 0;
+      let poolOutJPY = 0;
+      let poolExpenseCount = 0;
+
+      const memberBalances = {};
+      state.members.forEach(m => {
+        memberBalances[m.id] = { name: m.name, avatar: m.avatar, paidJPY: 0, shareJPY: 0, netJPY: 0, poolContributedJPY: 0 };
+      });
+
+      state.expenses.forEach(exp => {
+        const amountJPY = exp.currency === 'TWD' ? Math.round(exp.amount / rate) : exp.amount;
+
+        if (exp.category === 'pool_in') {
+          poolInJPY += amountJPY;
+          const contributors = (exp.splitMembers && exp.splitMembers.length > 0) ? exp.splitMembers : state.members.map(m => m.id);
+          const perCont = amountJPY / contributors.length;
+          contributors.forEach(mId => {
+            if (memberBalances[mId]) {
+              memberBalances[mId].poolContributedJPY += perCont;
+            }
+          });
+          return;
+        }
+
+        totalSpentJPY += amountJPY;
+
+        if (exp.payer === 'pool') {
+          poolOutJPY += amountJPY;
+          poolExpenseCount++;
+        } else {
+          if (memberBalances[exp.payer]) {
+            memberBalances[exp.payer].paidJPY += amountJPY;
+          }
+
+          const beneficiaries = (exp.splitMembers && exp.splitMembers.length > 0) 
+            ? exp.splitMembers 
+            : state.members.map(m => m.id);
+
+          const splitAmount = amountJPY / beneficiaries.length;
+          beneficiaries.forEach(mId => {
+            if (memberBalances[mId]) {
+              memberBalances[mId].shareJPY += splitAmount;
+            }
+          });
+        }
+      });
+
+      Object.keys(memberBalances).forEach(mId => {
+        const m = memberBalances[mId];
+        m.netJPY = Math.round(m.paidJPY - m.shareJPY);
+      });
+
+      const poolBalanceJPY = Math.max(0, poolInJPY - poolOutJPY);
+
+      const creditors = [];
+      const debtors = [];
+      Object.keys(memberBalances).forEach(mId => {
+        const net = memberBalances[mId].netJPY;
+        if (net > 0) creditors.push({ id: mId, name: memberBalances[mId].name, amount: net });
+        else if (net < 0) debtors.push({ id: mId, name: memberBalances[mId].name, amount: -net });
+      });
+
+      creditors.sort((a,b) => b.amount - a.amount);
+      debtors.sort((a,b) => b.amount - a.amount);
+
+      const settlements = [];
+      let cIdx = 0, dIdx = 0;
+      while (cIdx < creditors.length && dIdx < debtors.length) {
+        const c = creditors[cIdx];
+        const d = debtors[dIdx];
+        const settleAmount = Math.min(c.amount, d.amount);
+
+        if (settleAmount > 10) {
+          settlements.push({
+            from: d.name,
+            to: c.name,
+            amountJPY: Math.round(settleAmount),
+            amountTWD: Math.round(settleAmount * rate)
+          });
+        }
+
+        c.amount -= settleAmount;
+        d.amount -= settleAmount;
+
+        if (c.amount < 1) cIdx++;
+        if (d.amount < 1) dIdx++;
+      }
+
+      return { totalSpentJPY, poolInJPY, poolOutJPY, poolBalanceJPY, poolExpenseCount, memberBalances, settlements };
+    }
+
+    // --- Render Expenses View ---
+    function renderExpenses() {
+      const { totalSpentJPY, poolInJPY, poolOutJPY, poolBalanceJPY, poolExpenseCount, memberBalances, settlements } = calculateBalances();
+      const rate = state.exchangeRate;
+
+      // Pool Dashboard
+      document.getElementById('pool-balance-jpy').textContent = `¥${poolBalanceJPY.toLocaleString()}`;
+      document.getElementById('pool-balance-twd').textContent = `約 NT$ ${Math.round(poolBalanceJPY * rate).toLocaleString()}`;
+      document.getElementById('pool-total-in').textContent = `¥${poolInJPY.toLocaleString()}`;
+      document.getElementById('pool-total-out').textContent = `¥${poolOutJPY.toLocaleString()}`;
+      document.getElementById('pool-count').textContent = `${poolExpenseCount} 筆`;
+
+      // Stats
+      document.getElementById('stat-total-expense').textContent = `¥${totalSpentJPY.toLocaleString()}`;
+      document.getElementById('stat-total-twd').textContent = `約 NT$ ${Math.round(totalSpentJPY * rate).toLocaleString()}`;
+      
+      const avgJPY = state.members.length > 0 ? Math.round(totalSpentJPY / state.members.length) : 0;
+      document.getElementById('stat-avg-expense').textContent = `¥${avgJPY.toLocaleString()}`;
+      document.getElementById('stat-avg-twd').textContent = `約 NT$ ${Math.round(avgJPY * rate).toLocaleString()}`;
+      document.getElementById('stat-count-expense').textContent = `${state.expenses.length} 筆`;
+
+      // Members Balance Grid
+      const balanceGrid = document.getElementById('members-balance-grid');
+      balanceGrid.innerHTML = '';
+      state.members.forEach(m => {
+        const mb = memberBalances[m.id];
+        const isCreditor = mb.netJPY > 0;
+        const isDebtor = mb.netJPY < 0;
+
+        let badgeClass = 'text-stone-400 bg-stone-100';
+        let badgeText = '平帳';
+        if (isCreditor) {
+          badgeClass = 'text-emerald-700 bg-emerald-50 border border-emerald-200';
+          badgeText = `代墊多付 +¥${mb.netJPY.toLocaleString()}`;
+        } else if (isDebtor) {
+          badgeClass = 'text-blue-600 bg-blue-50 border border-blue-200';
+          badgeText = `尚須付 -¥${Math.abs(mb.netJPY).toLocaleString()}`;
+        }
+
+        const card = document.createElement('div');
+        card.className = 'p-3 rounded-2xl border border-blue-100 bg-blue-50/30 flex flex-col justify-between';
+        card.innerHTML = `
+          <div>
+            <div class="flex items-center justify-between">
+              <p class="font-bold text-stone-900 text-xs flex items-center">
+                <span class="mr-1">${m.avatar}</span>${m.name}
+              </p>
+              <span class="text-[9px] text-stone-400 font-mono">已繳:¥${Math.round(mb.poolContributedJPY).toLocaleString()}</span>
+            </div>
+            <p class="text-[10px] text-stone-500 mt-1">個人代墊: ¥${Math.round(mb.paidJPY).toLocaleString()}</p>
+          </div>
+          <div class="mt-2">
+            <span class="inline-block px-2 py-0.5 text-[10px] font-bold rounded-lg ${badgeClass}">${badgeText}</span>
+          </div>
+        `;
+        balanceGrid.appendChild(card);
+      });
+
+      // Settlement Plan
+      const settlementContainer = document.getElementById('settlement-plan');
+      settlementContainer.innerHTML = '';
+      if (settlements.length === 0) {
+        settlementContainer.innerHTML = '<p class="text-stone-400 font-medium">目前無個人代墊欠款，帳目平衡！ ✨</p>';
+      } else {
+        settlements.forEach(s => {
+          const row = document.createElement('div');
+          row.className = 'flex items-center justify-between py-1 border-b border-blue-200/50 last:border-0 font-medium';
+          row.innerHTML = `
+            <span><strong>${s.from}</strong> 應直接轉給 <strong>${s.to}</strong></span>
+            <span class="font-bold text-blue-600 font-mono">¥${s.amountJPY.toLocaleString()} <span class="font-normal text-[10px] text-stone-400">(NT$ ${s.amountTWD.toLocaleString()})</span></span>
+          `;
+          settlementContainer.appendChild(row);
+        });
+      }
+
+      // Expense Items List
+      const listContainer = document.getElementById('expenses-list');
+      listContainer.innerHTML = '';
+      if (state.expenses.length === 0) {
+        listContainer.innerHTML = `
+          <div class="text-center py-6 bg-white rounded-3xl border-2 border-blue-100 p-3">
+            <span class="text-2xl block mb-1">🧾</span>
+            <p class="text-stone-400 text-xs font-bold">目前尚無支出紀錄</p>
+          </div>
+        `;
+        return;
+      }
+
+      state.expenses.slice().reverse().forEach(exp => {
+        let payerName = '未知';
+        if (exp.payer === 'pool') {
+          payerName = '💳 團隊公費 (Shared Pool)';
+        } else {
+          const m = state.members.find(x => x.id === exp.payer);
+          if (m) payerName = m.name + ' (個人代墊)';
+        }
+
+        const isPoolIn = exp.category === 'pool_in';
+
+        const itemCard = document.createElement('div');
+        itemCard.className = `p-3.5 rounded-2xl border shadow-kawaii-sm flex items-center justify-between transition ${isPoolIn ? 'bg-emerald-50/60 border-emerald-200' : 'bg-white border-blue-100 hover:border-blue-200'}`;
+        itemCard.innerHTML = `
+          <div class="flex items-start space-x-3">
+            <div class="w-8 h-8 rounded-xl ${isPoolIn ? 'bg-emerald-100 text-emerald-700' : 'bg-blue-100 text-blue-600'} flex items-center justify-center text-xs flex-shrink-0 mt-0.5 shadow-sm">
+              ${isPoolIn ? '<i class="fa-solid fa-hand-holding-dollar"></i>' : 
+                exp.category === 'dining' ? '<i class="fa-solid fa-utensils"></i>' : 
+                exp.category === 'transport' ? '<i class="fa-solid fa-train"></i>' : 
+                exp.category === 'hotel' ? '<i class="fa-solid fa-hotel"></i>' : '<i class="fa-solid fa-coins"></i>'}
+            </div>
+            <div>
+              <div class="flex items-center space-x-2">
+                <h4 class="font-bold text-stone-900 text-xs sm:text-sm">${exp.title}</h4>
+                <span class="text-[9px] text-stone-400 font-mono">${exp.date || ''}</span>
+              </div>
+              <p class="text-[10px] text-stone-500 mt-0.5 font-medium">
+                ${isPoolIn ? '全員存入公費水庫' : `付款：<strong>${payerName}</strong>`}
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center space-x-2 flex-shrink-0">
+            <div class="text-right">
+              <p class="font-bold text-xs sm:text-sm ${isPoolIn ? 'text-emerald-700' : 'text-stone-900'} font-mono">
+                ${isPoolIn ? '+' : ''}${exp.currency === 'JPY' ? '¥' : 'NT$'}${exp.amount.toLocaleString()}
+              </p>
+              ${exp.currency === 'JPY' ? `<p class="text-[9px] text-stone-400">約 NT$ ${Math.round(exp.amount * rate).toLocaleString()}</p>` : ''}
+            </div>
+            <button class="btn-delete-expense text-stone-300 hover:text-rose-500 p-1.5 transition" data-id="${exp.id}" title="刪除">
+              <i class="fa-regular fa-trash-can text-xs"></i>
+            </button>
+          </div>
+        `;
+        listContainer.appendChild(itemCard);
+      });
+
+      document.querySelectorAll('.btn-delete-expense').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const id = e.currentTarget.dataset.id;
+          state.expenses = state.expenses.filter(x => x.id !== id);
+          saveState();
+          renderExpenses();
+          showToast('已刪除紀錄');
+        });
+      });
+    }
+
+    // --- Render Notes & Checklist ---
+    function renderNotes() {
+      const checklistContainer = document.getElementById('checklist-items');
+      checklistContainer.innerHTML = '';
+      const totalChecks = state.checklist.length;
+      const doneChecks = state.checklist.filter(c => c.done).length;
+      const progressPercent = totalChecks > 0 ? Math.round((doneChecks / totalChecks) * 100) : 0;
+
+      document.getElementById('checklist-progress-text').textContent = `進度：${doneChecks} / ${totalChecks} 完成 (${progressPercent}%)`;
+      document.getElementById('checklist-progress-bar').style.width = `${progressPercent}%`;
+
+      state.checklist.forEach(item => {
+        const itemRow = document.createElement('div');
+        itemRow.className = 'flex items-center justify-between p-2.5 rounded-2xl bg-blue-50/50 hover:bg-blue-100/50 transition border border-blue-100/60';
+        itemRow.innerHTML = `
+          <label class="flex items-center space-x-2.5 cursor-pointer flex-grow select-none">
+            <input type="checkbox" class="chk-item rounded-lg text-blue-600 focus:ring-sanrio-pink w-4 h-4 border-sky-300" data-id="${item.id}" ${item.done ? 'checked' : ''}>
+            <span class="${item.done ? 'line-through text-stone-400' : 'text-stone-800 font-bold'} text-xs">${item.text}</span>
+          </label>
+          <button class="btn-delete-chk text-stone-300 hover:text-rose-500 p-1 text-xs" data-id="${item.id}">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        `;
+        checklistContainer.appendChild(itemRow);
+      });
+
+      document.querySelectorAll('.chk-item').forEach(chk => {
+        chk.addEventListener('change', (e) => {
+          const id = e.target.dataset.id;
+          const found = state.checklist.find(c => c.id === id);
+          if (found) {
+            found.done = e.target.checked;
+            saveState();
+            renderNotes();
+          }
+        });
+      });
+
+      document.querySelectorAll('.btn-delete-chk').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const id = e.currentTarget.dataset.id;
+          state.checklist = state.checklist.filter(c => c.id !== id);
+          saveState();
+          renderNotes();
+        });
+      });
+
+      // Notes Grid
+      const notesContainer = document.getElementById('notes-grid');
+      notesContainer.innerHTML = '';
+      state.notes.forEach(note => {
+        const noteCard = document.createElement('div');
+        noteCard.className = 'bg-white p-4 rounded-3xl border-2 border-blue-100 shadow-kawaii-sm flex flex-col justify-between hover:shadow-md transition';
+        noteCard.innerHTML = `
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="px-2 py-0.5 text-[9px] font-bold rounded-lg bg-blue-100 text-blue-600">
+                ${note.category === 'shopping' ? '🛍️ 伴手禮購物' : note.category === 'food' ? '🍰 美食指南' : '📌 重要提醒'}
+              </span>
+              <button class="btn-delete-note text-stone-300 hover:text-rose-500 p-1" data-id="${note.id}" title="刪除">
+                <i class="fa-regular fa-trash-can text-xs"></i>
+              </button>
+            </div>
+            <h4 class="font-bold text-stone-900 text-xs sm:text-sm mb-1.5">${note.title}</h4>
+            <p class="text-xs text-stone-600 whitespace-pre-line leading-relaxed font-medium">${note.content}</p>
+          </div>
+        `;
+        notesContainer.appendChild(noteCard);
+      });
+
+      document.querySelectorAll('.btn-delete-note').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const id = e.currentTarget.dataset.id;
+          state.notes = state.notes.filter(n => n.id !== id);
+          saveState();
+          renderNotes();
+          showToast('筆記已刪除');
+        });
+      });
+    }
+
+    // --- Modal Management ---
+    function openExpenseModal() {
+      document.getElementById('expense-id').value = '';
+      document.getElementById('form-expense').reset();
+      document.getElementById('modal-expense-title').textContent = '新增支出項目 💸';
+
+      const payerSelect = document.getElementById('expense-payer');
+      payerSelect.innerHTML = `
+        <option value="pool">💳 團隊公費 (Shared Pool)</option>
+        ${state.members.map(m => `<option value="${m.id}">${m.avatar} ${m.name} (個人代墊)</option>`).join('')}
+      `;
+
+      const splitBox = document.getElementById('expense-split-members');
+      splitBox.innerHTML = state.members.map(m => `
+        <label class="flex items-center space-x-1.5 cursor-pointer">
+          <input type="checkbox" name="split_m" value="${m.id}" checked class="rounded text-blue-600 focus:ring-sanrio-pink">
+          <span class="text-[11px] text-stone-700 font-bold truncate">${m.avatar} ${m.name}</span>
+        </label>
+      `).join('');
+
+      document.getElementById('modal-expense').classList.remove('hidden');
+      document.getElementById('modal-expense').classList.add('flex');
+    }
+
+    function closeExpenseModal() {
+      document.getElementById('modal-expense').classList.add('hidden');
+      document.getElementById('modal-expense').classList.remove('flex');
+    }
+
+    function openCollectModal() {
+      document.getElementById('modal-collect-pool').classList.remove('hidden');
+      document.getElementById('modal-collect-pool').classList.add('flex');
+    }
+
+    function closeCollectModal() {
+      document.getElementById('modal-collect-pool').classList.add('hidden');
+      document.getElementById('modal-collect-pool').classList.remove('flex');
+    }
+
+    function openNoteModal() {
+      document.getElementById('note-id').value = '';
+      document.getElementById('form-note').reset();
+      document.getElementById('modal-note').classList.remove('hidden');
+      document.getElementById('modal-note').classList.add('flex');
+    }
+
+    function closeNoteModal() {
+      document.getElementById('modal-note').classList.add('hidden');
+      document.getElementById('modal-note').classList.remove('flex');
+    }
+
+    function openCloudModal() {
+      document.getElementById('modal-cloud-config').classList.remove('hidden');
+      document.getElementById('modal-cloud-config').classList.add('flex');
+    }
+
+    function closeCloudModal() {
+      document.getElementById('modal-cloud-config').classList.add('hidden');
+      document.getElementById('modal-cloud-config').classList.remove('flex');
+    }
+
+    // --- Initialization & Event Listeners ---
+    document.addEventListener('DOMContentLoaded', () => {
+      loadState();
+      initFirebaseSync();
+
+      // Navigation Tabs
+      document.querySelectorAll('.nav-tab').forEach(btn => {
+        btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+      });
+
+      // Day Tabs Bar
+      document.querySelectorAll('.day-tab').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          document.querySelectorAll('.day-tab').forEach(b => {
+            b.className = 'day-tab px-3 py-1.5 text-xs font-bold rounded-xl text-stone-500 hover:bg-blue-50 hover:text-blue-600 flex-shrink-0';
+          });
+          e.currentTarget.className = 'day-tab px-3 py-1.5 text-xs font-bold rounded-xl bg-gradient-to-r from-sanrio-pink to-rose-400 text-white shadow-sm flex-shrink-0';
+          state.currentDay = e.currentTarget.dataset.day;
+          renderItinerary();
+        });
+      });
+
+      // Tag Filter
+      document.querySelectorAll('.filter-tag').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          document.querySelectorAll('.filter-tag').forEach(b => {
+            b.className = 'filter-tag px-2.5 py-1 rounded-xl bg-white border border-blue-200 text-stone-600 hover:bg-blue-50 font-medium';
+          });
+          e.currentTarget.className = 'filter-tag px-2.5 py-1 rounded-xl bg-stone-200 text-stone-800 font-bold';
+          state.currentTag = e.currentTarget.dataset.tag;
+          renderItinerary();
+        });
+      });
+
+      // Exchange Rate Change
+      document.getElementById('input-exchange-rate').addEventListener('change', (e) => {
+        state.exchangeRate = parseFloat(e.target.value) || 0.21;
+        saveState();
+        renderExpenses();
+        showToast('已更新日圓匯率計算');
+      });
+
+      // Cloud Sync Button & Modal
+      document.getElementById('btn-open-cloud-config').addEventListener('click', openCloudModal);
+      document.getElementById('btn-close-cloud-modal').addEventListener('click', closeCloudModal);
+      document.getElementById('btn-cancel-cloud').addEventListener('click', closeCloudModal);
+
+      document.getElementById('btn-save-cloud').addEventListener('click', () => {
+        const configStr = document.getElementById('firebase-config-input').value.trim();
+        const roomKey = document.getElementById('firebase-room-key').value.trim() || 'kyushu_2026_tour';
+
+        if (!configStr) {
+          showToast('請貼上 Firebase 設定 JSON', false);
+          return;
+        }
+
+        try {
+          let cfg = JSON.parse(configStr);
+          state.firebaseConfig = cfg;
+          state.firebaseRoom = roomKey;
+          localStorage.setItem('kyushu_fb_config_v6', JSON.stringify(cfg));
+          localStorage.setItem('kyushu_fb_room_v6', roomKey);
+
+          closeCloudModal();
+          initFirebaseSync();
+        } catch (err) {
+          showToast('JSON 格式錯誤，請確認格式', false);
+        }
+      });
+
+      document.getElementById('btn-clear-cloud-sync').addEventListener('click', () => {
+        localStorage.removeItem('kyushu_fb_config_v6');
+        localStorage.removeItem('kyushu_fb_room_v6');
+        state.firebaseConfig = null;
+        state.isFirebaseConnected = false;
+        document.getElementById('firebase-config-input').value = '';
+        const badge = document.getElementById('sync-status-badge');
+        const text = document.getElementById('sync-status-text');
+        badge.className = 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-700 flex items-center space-x-1';
+        text.textContent = '本機模式';
+        closeCloudModal();
+        showToast('已恢復為本機離線模式');
+      });
+
+      // Expense Modals
+      document.getElementById('btn-open-add-expense').addEventListener('click', openExpenseModal);
+      document.getElementById('btn-close-expense-modal').addEventListener('click', closeExpenseModal);
+      document.getElementById('btn-cancel-expense').addEventListener('click', closeExpenseModal);
+
+      document.getElementById('btn-select-all-members').addEventListener('click', () => {
+        document.querySelectorAll('input[name="split_m"]').forEach(c => c.checked = true);
+      });
+      document.getElementById('btn-clear-members').addEventListener('click', () => {
+        document.querySelectorAll('input[name="split_m"]').forEach(c => c.checked = false);
+      });
+
+      // Collect Pool Modal
+      document.getElementById('btn-collect-pool').addEventListener('click', openCollectModal);
+      document.getElementById('btn-close-collect-modal').addEventListener('click', closeCollectModal);
+      document.getElementById('btn-cancel-collect').addEventListener('click', closeCollectModal);
+
+      document.getElementById('collect-amount').addEventListener('input', (e) => {
+        const amt = parseFloat(e.target.value) || 0;
+        const curr = document.getElementById('collect-currency').value;
+        const total = amt * state.members.length;
+        document.getElementById('collect-summary-text').textContent = `${curr === 'JPY' ? '¥' : 'NT$'}${total.toLocaleString()}`;
+      });
+
+      document.getElementById('form-collect-pool').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const perAmt = parseFloat(document.getElementById('collect-amount').value) || 0;
+        const curr = document.getElementById('collect-currency').value;
+        const desc = document.getElementById('collect-desc').value.trim() || '預收公費';
+        const total = perAmt * state.members.length;
+
+        state.expenses.push({
+          id: 'pool_' + Date.now(),
+          title: `${desc} (每人${curr==='JPY'?'¥':'NT$'}${perAmt.toLocaleString()})`,
+          amount: total,
+          currency: curr,
+          category: 'pool_in',
+          payer: 'pool',
+          splitMembers: state.members.map(m => m.id),
+          date: new Date().toLocaleDateString('zh-TW', { month: '2-digit', day: '2-digit' })
+        });
+
+        saveState();
+        closeCollectModal();
+        renderExpenses();
+        showToast(`已成功收取全員公費 ${curr==='JPY'?'¥':'NT$'}${total.toLocaleString()} 🌸`);
+      });
+
+      // Submit Expense
+      document.getElementById('form-expense').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const title = document.getElementById('expense-title').value.trim();
+        const amount = parseFloat(document.getElementById('expense-amount').value);
+        const currency = document.getElementById('expense-currency').value;
+        const category = document.getElementById('expense-category').value;
+        const payer = document.getElementById('expense-payer').value;
+
+        const checkedBoxes = Array.from(document.querySelectorAll('input[name="split_m"]:checked')).map(c => c.value);
+        const splitMembers = checkedBoxes.length > 0 ? checkedBoxes : state.members.map(m => m.id);
+
+        state.expenses.push({
+          id: 'exp_' + Date.now(),
+          title,
+          amount,
+          currency,
+          category,
+          payer,
+          splitMembers,
+          date: new Date().toLocaleDateString('zh-TW', { month: '2-digit', day: '2-digit' })
+        });
+
+        saveState();
+        closeExpenseModal();
+        renderExpenses();
+        showToast('已新增一筆支出項目！');
+      });
+
+      // Note Modals
+      document.getElementById('btn-open-add-note').addEventListener('click', openNoteModal);
+      document.getElementById('btn-close-note-modal').addEventListener('click', closeNoteModal);
+      document.getElementById('btn-cancel-note').addEventListener('click', closeNoteModal);
+
+      // Submit Note
+      document.getElementById('form-note').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const title = document.getElementById('note-title-input').value.trim();
+        const category = document.getElementById('note-category-input').value;
+        const content = document.getElementById('note-content-input').value.trim();
+
+        state.notes.push({
+          id: 'note_' + Date.now(),
+          title,
+          category,
+          content
+        });
+        saveState();
+        closeNoteModal();
+        renderNotes();
+        showToast('已新增一則筆記！');
+      });
+
+      // Inline Add Checklist Form
+      const addChkBtn = document.getElementById('btn-toggle-add-checklist');
+      const addChkForm = document.getElementById('checklist-add-form');
+      const inputNewChk = document.getElementById('input-new-checklist');
+      const saveNewChkBtn = document.getElementById('btn-save-new-checklist');
+      const cancelNewChkBtn = document.getElementById('btn-cancel-new-checklist');
+
+      addChkBtn.addEventListener('click', () => {
+        addChkForm.classList.remove('hidden');
+        inputNewChk.focus();
+      });
+
+      cancelNewChkBtn.addEventListener('click', () => {
+        addChkForm.classList.add('hidden');
+        inputNewChk.value = '';
+      });
+
+      saveNewChkBtn.addEventListener('click', () => {
+        const text = inputNewChk.value.trim();
+        if (text) {
+          state.checklist.push({
+            id: 'chk_' + Date.now(),
+            text: text,
+            done: false
+          });
+          saveState();
+          renderNotes();
+          inputNewChk.value = '';
+          addChkForm.classList.add('hidden');
+          showToast('已新增待辦項目 ✈️');
+        }
+      });
+
+      // LINE Share / Copy Settlement Summary
+      document.getElementById('btn-line-share').addEventListener('click', () => {
+        const { totalSpentJPY, poolBalanceJPY, poolInJPY, poolOutJPY, memberBalances, settlements } = calculateBalances();
+        const rate = state.exchangeRate;
+
+        let shareText = `🌸【九州 7 天 6 夜 ｜ 5人公費與分帳結算報告】🌸\n\n`;
+        shareText += `💰 公費水庫現狀：\n`;
+        shareText += `• 總收公費：¥${poolInJPY.toLocaleString()}\n`;
+        shareText += `• 公費已付：¥${poolOutJPY.toLocaleString()}\n`;
+        shareText += `• 剩餘公費現金：¥${poolBalanceJPY.toLocaleString()} (約 NT$ ${Math.round(poolBalanceJPY * rate).toLocaleString()})\n\n`;
+        shareText += `📊 全體總支出 (含個人代墊)：¥${totalSpentJPY.toLocaleString()}\n`;
+        shareText += `• 每人平均支出：¥${Math.round(totalSpentJPY / state.members.length).toLocaleString()}\n\n`;
+        shareText += `👥 成員個人代墊狀況：\n`;
+        state.members.forEach(m => {
+          const mb = memberBalances[m.id];
+          const sign = mb.netJPY >= 0 ? '+' : '';
+          shareText += `• ${m.name}：個人代墊 ¥${Math.round(mb.paidJPY).toLocaleString()} (淨餘額 ${sign}¥${mb.netJPY.toLocaleString()})\n`;
+        });
+        if (settlements.length > 0) {
+          shareText += `\n🤝 個人代墊平帳建議：\n`;
+          settlements.forEach(s => {
+            shareText += `• ${s.from} ➜ 直接轉給 ${s.to}：¥${s.amountJPY.toLocaleString()} (NT$ ${s.amountTWD.toLocaleString()})\n`;
+          });
+        }
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(shareText).then(() => {
+            showToast('公費明細已複製到剪貼簿！可直接貼至 LINE 群組');
+          }).catch(() => {
+            showToast('複製完成');
+          });
+        } else {
+          showToast('已產生分帳報告');
+        }
+      });
+
+      // Export JSON backup
+      document.getElementById('btn-export-data')?.addEventListener('click', () => {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2));
+        const downloadAnchor = document.createElement('a');
+        downloadAnchor.setAttribute("href", dataStr);
+        downloadAnchor.setAttribute("download", `kyushu_trip_backup_${Date.now()}.json`);
+        document.body.appendChild(downloadAnchor);
+        downloadAnchor.click();
+        downloadAnchor.remove();
+        showToast('已下載資料備份檔');
+      });
+
+      // Initial Render
+      renderItinerary();
+      renderExpenses();
+      renderNotes();
+    });
+  </script>
+</body>
+</html>
